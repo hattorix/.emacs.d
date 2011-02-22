@@ -1,0 +1,712 @@
+;;--------------------------------------------------
+;; File name    :   siteinit.el
+;;              :   Emacs の基本的な設定
+;;              :
+;;--------------------------------------------------
+;;
+;=======================================================================
+; このファイルが置かれているディレクトリ
+;=======================================================================
+(defvar siteinit-path (file-name-directory (locate-library "siteinit")))
+
+;;
+;=======================================================================
+; Language
+;=======================================================================
+(set-language-environment "Japanese")
+
+;;
+;=======================================================================
+; OS ごとの設定を読み込む
+;=======================================================================
+(cond
+  ;; Windows の NTEmacs23
+  ((and (equal system-type 'windows-nt) (= emacs-major-version 23))
+   (load (concat siteinit-path "ntemacs23")))
+  ;; Linux の Emacs23
+  ((= emacs-major-version 23)
+   (load (concat siteinit-path "emacs23"))))
+  ;)
+
+;;
+;=======================================================================
+; elisp の追加読み込み PATH
+;=======================================================================
+(add-to-list 'load-path (concat siteinit-path "anything"))
+(add-to-list 'load-path (concat siteinit-path "auto-complete"))
+(add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+
+;;
+;=======================================================================
+; elisp の自動バイトコンパイル
+;=======================================================================
+(require 'auto-async-byte-compile)
+;; 無視リスト
+(setq auto-async-byte-compile-exclude-files-regexp "/junk/")
+(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+
+;;
+;=======================================================================
+; mmm-mode
+; バッファ内で、複数のメジャーモードを共存
+;
+; - Project page
+; http://mmm-mode.sourceforge.net/
+;=======================================================================
+;; mmm-mode
+(require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+(set-face-background 'mmm-default-submode-face nil)
+;(set-face-background 'mmm-default-submode-face "gainsboro")
+
+;;
+;=======================================================================
+; isearch
+;=======================================================================
+;; isearch 中に、カーソル付近の文字を 1 文字ずつ追加
+(defun isearch-yank-char ()
+  "Pull next character from buffer into search string."
+  (interactive)
+  (isearch-yank-string
+   (save-excursion
+     (and (not isearch-forward) isearch-other-end
+          (goto-char isearch-other-end))
+     (buffer-substring (point) (1+ (point))))))
+
+;; C-w で追加した後でも、一文字ずつ消す
+(defun isearch-real-delete-char ()
+  (interactive)
+  (setq isearch-string
+        (if (< (length isearch-string) 1)
+            ""
+          (substring isearch-string 0 (- (length isearch-string) 1)))
+        isearch-message isearch-string
+        isearch-yank-flag t)
+  (isearch-search-and-update))
+
+;; isearch で検索している単語で occur をする
+(defun isearch-occur ()
+  "Invoke `occur' from within isearch."
+  (interactive)
+  (let ((case-fold-search isearch-case-fold-search))
+    (occur
+     (if isearch-regexp
+         isearch-string (regexp-quote isearch-string)))))
+
+(define-key isearch-mode-map "\C-f" 'isearch-yank-char)
+(define-key isearch-mode-map "\C-h" 'isearch-real-delete-char)
+(define-key isearch-mode-map "\C-l" 'isearch-edit-string)      ; C-lでキーワードの編集
+(define-key isearch-mode-map "\C-o" 'isearch-occur)
+
+;;
+;=======================================================================
+; minibuf-isearch.el
+; - ミニバッファで isearch 的な検索をする
+;
+; - Project page
+; http://www.sodan.org/~knagano/emacs/minibuf-isearch/
+;=======================================================================
+(require 'minibuf-isearch)
+;; minibuf-isearch 中は migemo を利用しない
+(setq minibuf-isearch-use-migemo nil)
+
+;;
+;=======================================================================
+; session.el
+; - ミニバッファの履歴をファイルに保存し、次回起動時にも持ち越せる
+;
+; - Project page
+; http://emacs-session.sourceforge.net/
+;=======================================================================
+(require 'session)
+(setq session-initialize '(de-saveplace session keys menus places)
+      session-globals-include '((kill-ring 50)
+                                (session-file-alist 500 t)
+                                (file-name-history 10000)))
+;; これがないと file-name-history に500個保存する前に max-string に達する
+(setq session-globals-max-string 100000000)
+;; デフォルトでは30!
+(setq history-length t)
+(add-hook 'after-init-hook 'session-initialize)
+
+;;
+;=======================================================================
+; kill-summary.el
+; - kill-ring の内容を一覧表示してそこから yank する
+;
+; - Project page
+; http://emacs-session.sourceforge.net/
+;=======================================================================
+(autoload 'kill-summary "kill-summary" nil t)
+
+;;
+;=======================================================================
+; gtags.el
+; - GNU Global を使ったタグジャンプ
+;
+; - Project page
+; http://www.gnu.org/software/global/
+;=======================================================================
+(when (locate-library "gtags")
+  (require 'gtags))
+
+;; *GTAGS SELECT* バッファを一つしか生成しないようにする
+(setq gtags-select-buffer-single t)
+
+;; gtags を使用するモード
+(add-hook 'java-mode-hook (lambda () (gtags-mode 1)))
+(add-hook 'c-mode-hook (lambda () (gtags-mode 1)))
+(add-hook 'c++-mode-hook (lambda () (gtags-mode 1)))
+
+;;
+;=======================================================================
+; tabbar.el
+; - バッファリストのタブ表示
+;
+; - インストール
+; # aptitude install emacs-goodies-el
+;
+; - Project wiki
+; http://www.emacswiki.org/cgi-bin/wiki/TabBarMode
+;=======================================================================
+(require 'tabbar)
+
+(cond ((string= tabbar-version "2.0")
+       ;; Ubuntu 付属の tabbar
+       ;;
+       ;; タブをグループ化しない
+       (setq tabbar-buffer-groups-function
+             (lambda () (list "All Buffers")))
+
+       ;; `*scratch*' 以外の ` *'から始まるバッファーをリストしない
+       (setq tabbar-buffer-list-function
+             (lambda ()
+               (remove-if
+                (lambda (buffer)
+                  (unless (string= (buffer-name buffer) "*scratch*")
+                    (find (aref (buffer-name buffer) 0) " *")))
+                (buffer-list))))
+
+       ;; 左端のボタンを無効化
+       (setq tabbar-home-button nil)
+       (setq tabbar-buffer-home-button nil)
+       (setq tabbar-scroll-left-button nil)
+       (setq tabbar-scroll-right-button nil)
+
+       (set-face-attribute 'tabbar-default nil :background "gray60")
+       (set-face-attribute 'tabbar-unselected nil :background "gray85" :foreground "gray30" :box nil)
+       (set-face-attribute 'tabbar-selected nil :background "#f2f2f6" :foreground "red" :box nil)
+       (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72" :style released-button))
+
+       ;; 幅設定
+       (setq tabbar-separator (list 0.5)))
+
+      (t
+       ;; NTEmacs 用 (tabbar-version 1.3)
+       ;;
+       ;; タブをグループ化しない
+       (setq tabbar-buffer-groups-function
+             (lambda (b) (list "All Buffers")))
+
+       ;; `*scratch*' 以外の ` *'から始まるバッファーをリストしない
+       (setq tabbar-buffer-list-function
+             (lambda ()
+               (remove-if
+                (lambda (buffer)
+                  (unless (string= (buffer-name buffer) "*scratch*")
+                    (find (aref (buffer-name buffer) 0) " *")))
+                (buffer-list))))
+
+       ;; 左端のボタンを無効化
+       (setq tabbar-home-button-enabled "")
+       (setq tabbar-scroll-right-button-enabled "")
+       (setq tabbar-scroll-left-button-enabled "")
+       (setq tabbar-scroll-right-button-disabled "")
+       (setq tabbar-scroll-left-button-disabled "")
+
+       ;; 色設定
+       (set-face-attribute 'tabbar-default-face nil :background "gray60")
+       (set-face-attribute 'tabbar-unselected-face nil :background "gray85" :foreground "gray30" :box nil)
+       (set-face-attribute 'tabbar-selected-face nil :background "#f2f2f6" :foreground "red" :box nil)
+       (set-face-attribute 'tabbar-button-face nil :box '(:line-width 1 :color "gray72" :style released-button))
+
+       ;; 幅設定
+       (set-face-attribute 'tabbar-separator-face nil :height 0.7)))
+
+;; tabbar を有効にする
+(tabbar-mode)
+
+;=======================================================================
+; setnu.el, setnu+.el
+; - 行番号表示モード
+;
+; - Project wiki
+; http://www.emacswiki.org/emacs/LineNumbers#toc9
+;=======================================================================
+(autoload 'setnu-mode "setnu+" nil t)
+
+;;
+;=======================================================================
+; yasnippet.el
+; - 入力支援
+;
+; - Project homepage
+; http://code.google.com/p/yasnippet/
+;=======================================================================
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory (concat siteinit-path "snippets"))
+
+;;
+;=======================================================================
+; anything.el
+; - ファイルを開くを一元化
+;
+; - Project wiki
+; http://www.emacswiki.org/emacs/Anything/
+;=======================================================================
+(require 'anything-config)
+
+;; 情報元を設定
+(setq anything-sources (list anything-c-source-buffers
+                             anything-c-source-bookmarks
+                             anything-c-source-file-name-history
+                             anything-c-source-man-pages
+                             anything-c-source-info-pages
+                             anything-c-source-complex-command-history))
+
+;; anything のキーマップ
+(define-key anything-map "\C-p" 'anything-previous-line)
+(define-key anything-map "\C-n" 'anything-next-line)
+(define-key anything-map "\C-v" 'anything-next-page)
+(define-key anything-map "\M-v" 'anything-previous-page)
+
+;;
+;=======================================================================
+; dabbrev-ja.el
+; - 日本語で dabbrev(動的略語補完) を使う
+;=======================================================================
+;(load "dabbrev-ja")
+
+;;
+;=======================================================================
+; redo+.el
+; - undo, redo を行えるようにする
+;
+; http://www11.atwiki.jp/s-irie/pages/18.html
+;=======================================================================
+(require 'redo+)
+(setq undo-no-redo t)
+
+;;
+;=======================================================================
+; auto-complete.el
+; - 自動保管
+;
+; - Project wiki
+; http://www.emacswiki.org/emacs/AutoComplete
+;=======================================================================
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories
+             (concat siteinit-path "auto-complete/dict"))
+(ac-config-default)
+
+;; 4 文字以上の単語の時に補完を開始する
+(setq ac-auto-start 4)
+
+;;
+;=======================================================================
+; magit.el
+; - Git
+;
+; - Project page
+; http://github.com/jdhuntington/magit
+;=======================================================================
+(autoload 'magit-status "magit/magit" nil t)
+
+;;
+;=======================================================================
+; c-mode, c++-mode
+;=======================================================================
+;; インデント設定
+(add-hook 'c-mode-common-hook
+          '(lambda ()
+             ; インデントスタイルの設定(gnu,bsd,k&r,stroustrup,linux,java)
+             (c-set-style "stroustrup")
+             ; インデントに使う文字設定(t: タブ, nil: スペース)
+             (setq indent-tabs-mode nil)
+             ; インデント幅
+             (setq c-basic-offset 4)
+             ; Enterで改行とインデント
+             (define-key c-mode-base-map "\C-m" 'newline-and-indent)
+             ))
+
+;;
+;=======================================================================
+; kanji-code.el
+; - 日本語と Escaped Unicode を変換する
+;=======================================================================
+(autoload 'kanji-to-unicode-buffer "kanji-code" nil t)
+(autoload 'kanji-to-unicode-region "kanji-code" nil t)
+(autoload 'unicode-to-kanji-buffer "kanji-code" nil t)
+(autoload 'unicode-to-kanji-region "kanji-code" nil t)
+
+;;
+;=======================================================================
+; actionscript-mode
+;
+; - Project wiki
+; http://www.emacswiki.org/emacs/ActionScriptMode/
+;=======================================================================
+(autoload 'actionscript-mode "actionscript-mode" "actionscript" t)
+(add-to-list 'auto-mode-alist '("\\.as\\'" . actionscript-mode))
+(add-to-list 'auto-mode-alist '("\\.mxml\\'" . xml-mode))
+
+;; mxml + Action Script
+(mmm-add-classes
+ '((embedded-as
+    :submode actionscript-mode
+    :face mmm-code-submode-face
+    ;:front "<mx:Script[^>]*>\\n?\\s-*<!\\[CDATA\\["
+    ;:back "]]>\\n?\\s-*</mx:Script>")))
+    :front "<mx:Script>"
+    :back "</mx:Script>")))
+(mmm-add-mode-ext-class nil "\\.mxml\\'" 'embedded-as)
+
+;;
+;=======================================================================
+; twittering-mode
+;
+; - Project wiki
+; http://www.emacswiki.org/emacs/TwitteringMode/
+;=======================================================================
+(require 'twittering-mode)
+(setq twittering-icon-mode t)                ; Show icons
+
+;;
+;=======================================================================
+; スクロール設定
+;=======================================================================
+;; ホイールマウスでスクロールを有効に
+(mouse-wheel-mode)
+
+;; ホイールマウスのスクロール幅を設定（画面の８分の１）
+(global-set-key [mouse-4] '(lambda () (interactive) (scroll-down (/ (window-height) 8))))
+(global-set-key [mouse-5] '(lambda () (interactive) (scroll-up (/ (window-height) 8))))
+
+;; スクロール時にカーソル位置を変えない
+(setq scroll-preserve-screen-position t)
+
+;; スクロールマージン
+(setq scroll-margin 20)
+
+;; スクロール時の移動量
+(setq scroll-conservatively 6)
+
+;;
+;=======================================================================
+; 一般拡張
+;=======================================================================
+(setq make-backup-files nil)                   ;バックアップファイルを作成しない
+(setq auto-save-timeout 30)                    ;自動保存する間隔（秒）。
+(setq auto-save-interval 300)                  ;300打鍵ごとに自動保存
+(setq visible-bell t)                          ;警告音を消す
+(setq kill-whole-line t)                       ;カーソルが行頭にある場合も行全体を削除
+(setq ring-bell-function 'ignore)              ;エラー音をならなくする
+(setq delete-by-moving-to-trash t)             ;ごみ箱を有効
+
+;; インデントに使用する関数を指定
+(setq indent-line-function 'indent-relative-maybe)
+
+;; yankのシステムへのコピー
+(cond (window-system
+       (setq x-select-enable-clipboard t)
+       ))
+
+;;
+;=======================================================================
+; 表示設定
+;=======================================================================
+;; 起動時の画面はいらない
+(setq inhibit-startup-message t)
+
+;; タイトル
+(setq frame-title-format     ;フレームのタイトル指定
+      (concat "%b - emacs@" system-name))
+
+;; 一般修飾
+(global-font-lock-mode t)    ;文字の色つけ
+(auto-compression-mode t)    ;日本語infoの文字化け防止
+
+;; 括弧
+(setq parse-sexp-ignore-comments t) ;コメント内の括弧は無視
+
+;; タブ幅を4に設定
+(setq-default tab-width 4)
+
+;-----------------------------------------------
+; タブ、全角スペース、行末のスペースを表示させる
+;-----------------------------------------------
+(defface my-face-b-1 '((t (:background "gray"))) nil)
+(defface my-face-b-2 '((t (:background "gray26"))) nil)
+(defface my-face-u-1 '((t (:foreground "SteelBlue" :underline t))) nil)
+(defvar my-face-b-1 'my-face-b-1)
+(defvar my-face-b-2 'my-face-b-2)
+(defvar my-face-u-1 'my-face-u-1)
+
+(defadvice font-lock-mode (before my-font-lock-mode ())
+  (font-lock-add-keywords
+   major-mode
+   '(("\t" 0 my-face-b-2 append)
+     ("　" 0 my-face-b-1 append)
+     ("[ \t]+$" 0 my-face-u-1 append)
+     )))
+(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
+(ad-activate 'font-lock-mode)
+
+;-----------------------------------------------
+; カーソル行をハイライト
+;-----------------------------------------------
+(defface hlline-face
+  '((((class color)
+      (background dark))
+     (:background "#004422"))
+    (((class color)
+      (background light))
+     (:background "SkyBlue"))
+    (t
+     ()))
+  "*Face used by hl-line.")
+(setq hl-line-face 'hlline-face)  ; or 'underline
+(global-hl-line-mode)
+
+;;
+;=======================================================================
+; バッファ設定
+;=======================================================================
+
+;; バッファの切り替えに iswitchb を使う
+(iswitchb-mode t)
+
+;; C-xb 後の C-s, C-r で、プレビュー表示する
+(defadvice iswitchb-exhibit
+  (after
+   iswitchb-exhibit-with-display-buffer
+   activate)
+  "選択している buffer を window に表示してみる。"
+  (when (and
+         (eq iswitchb-method iswitchb-default-method)
+         iswitchb-matches)
+    (select-window
+     (get-buffer-window (cadr (buffer-list))))
+    (let ((iswitchb-method 'samewindow))
+      (iswitchb-visit-buffer
+       (get-buffer (car iswitchb-matches))))
+    (select-window (minibuffer-window))))
+
+(defun my-make-scratch (&optional arg)
+  (interactive)
+  (progn
+    ;; "*scratch*" を作成して buffer-list に放り込む
+    (set-buffer (get-buffer-create "*scratch*"))
+    (funcall initial-major-mode)
+    (erase-buffer)
+    (when (and initial-scratch-message (not inhibit-startup-message))
+      (insert initial-scratch-message))
+    (or arg (progn (setq arg 0)
+                   (switch-to-buffer "*scratch*")))
+    (cond ((= arg 0) (message "*scratch* is cleared up."))
+          ((= arg 1) (message "another *scratch* is created")))))
+
+(defun my-buffer-name-list ()
+  (mapcar (function buffer-name) (buffer-list)))
+
+(add-hook 'kill-buffer-query-functions
+          ;; *scratch* バッファで kill-buffer したら内容を消去するだけにする
+          (function (lambda ()
+                      (if (string= "*scratch*" (buffer-name))
+                          (progn (my-make-scratch 0) nil)
+                        t))))
+
+(add-hook 'after-save-hook
+          ;; *scratch* バッファの内容を保存したら *scratch* バッファを新しく作る
+          (function (lambda ()
+                      (unless (member "*scratch*" (my-buffer-name-list))
+                        (my-make-scratch 1)))))
+
+;;
+;=======================================================================
+; Customizer
+;=======================================================================
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(backup-by-copying nil)
+ '(column-number-mode t)
+ '(display-time-mode t)
+ '(indent-tabs-mode nil)
+ '(indicate-buffer-boundaries (quote right))
+ '(make-backup-files nil)
+ '(scroll-bar-mode (quote right))
+ '(show-paren-mode t)
+ '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60)))
+ '(tool-bar-mode nil))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(cursor ((t (:background "cyan2" :foreground "black"))))
+ '(mode-line ((t (:background "grey" :foreground "#000000"))))
+ '(region ((t (:background "cyan2" :foreground "black")))))
+
+;;
+;=======================================================================
+; フレームサイズ・位置・色など
+;=======================================================================
+(setq initial-frame-alist
+      (append (list
+               '(top . 0)                      ;; Y 表示位置
+               '(left . 0)                     ;; X 表示位置
+               '(width . 110)                  ;; フレームの幅
+               '(height . 60)                  ;; フレームの高さ
+               '(foreground-color . "white")   ;; 文字色
+               '(background-color . "#222222") ;; 背景色
+               '(cursor-type  . box)           ;; カーソルのタイプ
+               '(border-color . "black")
+               '(mouse-color . "white")
+               )
+              initial-frame-alist))
+(setq default-frame-alist initial-frame-alist)
+
+;;
+;=======================================================================
+; schema-mode using gauche
+;=======================================================================
+(setq scheme-program-name "gosh -i")
+(autoload 'schema-mode "cmuscheme" "Major mode for Scheme." t)
+(autoload 'run-mode "cmuscheme" "Run an inferior Scheme process." t)
+
+(defun scheme-other-window ()
+  "Run scheme on other window"
+  (interactive)
+  (split-window-horizontally)
+  (switch-to-buffer-other-window
+   (get-buffer-create "*scheme*"))
+  (run-scheme scheme-program-name)
+  (other-window -1))
+
+;;
+;=======================================================================
+; function
+;=======================================================================
+
+;; カレントバッファを閉じる
+(defun my-kill-buffer (all)
+  (interactive "P")
+  (if all
+      ;; prefix argument があれば全バッファを削除
+      (loop for buffer being the buffers
+            do (kill-buffer buffer))
+    (kill-buffer nil)))
+
+;; カレントバッファを閉じる
+(defun my-revert-buffer (&optional coding-system)
+  (interactive "zCoding system for visited file (default nil): \nP")
+  (if coding-system
+      ;; prefix argument があればエンコード指定
+      ;(revert-buffer-with-coding-system coding-system)
+      t
+    (revert-buffer t t)))
+
+;; カーソル位置の単語を検索
+(defun search-word-cursor ()
+  (interactive)
+  (if (thing-at-point 'symbol)
+    (occur (thing-at-point 'symbol))
+    (call-interactively 'occur)))
+
+;; 二分割されている画面を入れ替える
+(defun swap-screen ()
+  "Swap two screen,leaving cursor at current window."
+  (interactive)
+  (let ((thiswin (selected-window))
+        (nextbuf (window-buffer (next-window))))
+    (set-window-buffer (next-window) (window-buffer))
+    (set-window-buffer thiswin nextbuf)))
+
+;; 二分割されている画面、カーソルを入れ替える
+(defun swap-screen-with-cursor ()
+  "Swap two screen,with cursor in same buffer."
+  (interactive)
+  (let ((thiswin (selected-window))
+        (thisbuf (window-buffer)))
+    (other-window 1)
+    (set-window-buffer thiswin (window-buffer))
+    (set-window-buffer (selected-window) thisbuf)))
+
+;; ウィンドウ二分割時に、縦分割<->横分割
+(defun window-toggle-division ()
+  "ウィンドウ 2 分割時に、縦分割<->横分割"
+  (interactive)
+  (unless (= (count-windows 1) 2)
+    (error "ウィンドウが 2 分割されていません。"))
+  (let (before-height (other-buf (window-buffer (next-window))))
+    (setq before-height (window-height))
+    (delete-other-windows)
+    (if (= (window-height) before-height)
+        (split-window-vertically)
+      (split-window-horizontally)
+      )
+    (switch-to-buffer-other-window other-buf)
+    (other-window -1)))
+
+;; 対応する括弧に移動する
+(defun match-paren (arg)
+  "Go to the matching parenthesis if on parenthesis otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+;        (t (self-insert-command (or arg 1)))))
+        ))
+
+;;
+;=======================================================================
+; キーカスタマイズ
+;=======================================================================
+
+(global-set-key "\C-h" 'backward-delete-char)  ;バックスペース
+(global-set-key "\C-i" 'auto-complete)         ;文字列保管
+(global-set-key [zenkaku-hankaku]
+                'toggle-input-method)          ;日本語入力
+(global-set-key "\C-o" 'toggle-input-method)   ;日本語入力
+(global-set-key "\C-s" 'isearch-forward-regexp);正規表現で検索
+(global-set-key "\C-r" 'query-replace-regexp)  ;正規表現で置換
+(global-set-key "\C-x\C-g" 'my-revert-buffer)  ;カレントバッファを再読み込み
+(global-set-key "\C-xk" 'my-kill-buffer)       ;カレントバッファを閉じる
+(global-set-key "\C-x\C-b" 'buffer-menu)       ;ウィンドウ分割しないバッファメニュー
+(global-set-key "\C-\\" 'undo)                 ;undo
+(global-set-key "\C-]" 'match-paren)           ;対応する括弧に移動
+(global-set-key "\C-\M-y" 'kill-summary)       ;kill-ring 一覧から yank
+(global-set-key "\M-k" '(lambda () (interactive) (kill-line 0))) ;;行頭まで削除
+(global-set-key "\M-g" 'goto-line)             ;指定行へ移動
+;; 半ページ/スクロール
+(global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
+(global-set-key "\M-[" '(lambda () (interactive) (scroll-down (/ (window-height) 2))))
+
+(global-set-key [f1] 'help-for-help)           ;ヘルプ
+(global-set-key [f2] 'tabbar-backward-tab)     ;前のタブへ
+(global-set-key [S-f2] 'tabbar-backward-group) ;前のタブグループへ
+(global-set-key [f3] 'tabbar-forward-tab)      ;次のタブへ
+(global-set-key [S-f3] 'tabbar-forward-group)  ;次のタブグループへ
+(global-set-key [f10] 'gtags-find-tag-from-here);タグジャンプ
+(global-set-key [S-f10] 'gtags-pop-stack)      ;バックタグジャンプ
+(global-set-key [f12] 'redo)                   ;redo
+;(global-set-key [f12] 'setnu-mode)             ;行番号表示
+
+(global-set-key "\C-cg" 'magit-status)         ;magit実行
+(global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
+
+(put 'set-goal-column 'disabled nil)
