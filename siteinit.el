@@ -183,7 +183,7 @@
              (lambda ()
                (remove-if
                 (lambda (buffer)
-                  (unless (string= (buffer-name buffer) "*scratch*")
+                  (unless (string-match-p "\\*\\(scratch\\|tmp\\)" (buffer-name buffer))
                     (find (aref (buffer-name buffer) 0) " *")))
                 (buffer-list))))
 
@@ -213,7 +213,7 @@
              (lambda ()
                (remove-if
                 (lambda (buffer)
-                  (unless (string= (buffer-name buffer) "*scratch*")
+                  (unless (string-match-p "\\*\\(scratch\\|tmp\\)" (buffer-name buffer))
                     (find (aref (buffer-name buffer) 0) " *")))
                 (buffer-list))))
 
@@ -621,6 +621,16 @@
       t
     (revert-buffer t t)))
 
+;; 作業用バッファを作る
+(defvar tmp-buffer-count 0 "new bufferを作った数")
+(defun create-tmp-buffer ()
+  (interactive)
+  (switch-to-buffer (if (= tmp-buffer-count 0)
+                        "*tmp*"
+                        ; TODO: 動的に数値を取得する
+                        (concat "*tmp (" (number-to-string tmp-buffer-count) ")*")))
+  (setq tmp-buffer-count (+ 1 tmp-buffer-count)))
+
 ;; カーソル位置の単語を検索
 (defun search-word-cursor ()
   (interactive)
@@ -686,8 +696,10 @@
 (global-set-key "\C-r" 'query-replace-regexp)  ;正規表現で置換
 (global-set-key "\C-x\C-g" 'my-revert-buffer)  ;カレントバッファを再読み込み
 (global-set-key "\C-xk" 'my-kill-buffer)       ;カレントバッファを閉じる
+(global-set-key "\C-xt" 'create-tmp-buffer)    ;作業用バッファを作る
 (global-set-key "\C-x\C-b" 'buffer-menu)       ;ウィンドウ分割しないバッファメニュー
 (global-set-key "\C-\\" 'undo)                 ;undo
+(global-set-key [?\C-:] 'search-word-cursor)   ;カーソル下の単語で検索
 (global-set-key "\C-]" 'match-paren)           ;対応する括弧に移動
 (global-set-key "\C-\M-y" 'kill-summary)       ;kill-ring 一覧から yank
 (global-set-key "\M-k" '(lambda () (interactive) (kill-line 0))) ;;行頭まで削除
@@ -701,6 +713,8 @@
 (global-set-key [S-f2] 'tabbar-backward-group) ;前のタブグループへ
 (global-set-key [f3] 'tabbar-forward-tab)      ;次のタブへ
 (global-set-key [S-f3] 'tabbar-forward-group)  ;次のタブグループへ
+(global-set-key [f7] 'next-error)              ;次のエラーを検索
+(global-set-key [S-f7] 'previous-error)        ;前のエラーを検索
 (global-set-key [f10] 'gtags-find-tag-from-here);タグジャンプ
 (global-set-key [S-f10] 'gtags-pop-stack)      ;バックタグジャンプ
 (global-set-key [f12] 'redo)                   ;redo
