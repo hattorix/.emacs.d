@@ -381,7 +381,7 @@
 ; http://www.emacswiki.org/emacs/TwitteringMode/
 ;=======================================================================
 (require 'twittering-mode)
-(setq twittering-icon-mode t)                ; Show icons
+(setq twittering-icon-mode t)                 ; Show icons
 
 ;;
 ;=======================================================================
@@ -418,6 +418,7 @@
 (setq ring-bell-function 'ignore)              ;エラー音をならなくする
 (setq delete-by-moving-to-trash t)             ;ごみ箱を有効
 (setq-default indent-tabs-mode nil)            ;インデントにはスペースを使う
+(setq require-final-newline t)                 ;ファイル末尾に改行追加
 
 ;; インデントに使用する関数を指定
 (setq indent-line-function 'indent-relative-maybe)
@@ -432,11 +433,13 @@
 ; 表示設定
 ;=======================================================================
 (auto-compression-mode t)                      ;日本語infoの文字化け防止
+(auto-image-file-mode t)                       ;画像ファイルを表示
 (blink-cursor-mode 0)                          ;カーソルを点滅しないように
 (global-font-lock-mode t)                      ;font-lockを有効
 (set-scroll-bar-mode 'right)                   ;スクロールバーを右側に表示
 (setq inhibit-startup-message t)               ;起動時の画面はいらない
 (setq parse-sexp-ignore-comments t)            ;コメント内の括弧は無視
+(setq show-paren-style 'mixed)                 ;対応する括弧がウィンドウ内に収まらないときに光らせる
 (setq tab-stop-list '(4 8 12 16 20 24 28 32    ;タブストップ位置の設定
                         36 40 48 52 56 60 64
                         68 72 76 80))
@@ -498,27 +501,32 @@
 (column-number-mode t)
 
 ;-----------------------------------------------
-; タブ、全角スペース、行末のスペースを表示させる
+; タブや全角スペース、行末のスペースを表示する
+;
+; - 行末のスペースは次のコマンドで削除できる
+; M-x delete-trailing-whitespace
 ;-----------------------------------------------
-(defface my-face-b-1 '((t (:background "gray"))) nil)
-(defface my-face-b-2 '((t (:background "gray26"))) nil)
-(defface my-face-u-1 '((t (:foreground "SteelBlue" :underline t))) nil)
-(defvar my-face-b-1 'my-face-b-1)
-(defvar my-face-b-2 'my-face-b-2)
-(defvar my-face-u-1 'my-face-u-1)
+(require 'whitespace)
+(setq whitespace-style '(tabs tab-mark
+                         spaces space-mark
+                         newline newline-mark
+                         ))
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+(setq whitespace-display-mappings
+      '((space-mark ?\u3000 [?\u25a1])            ;全角スペース
+        (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])      ;タブ
+        (newline-mark ?\n [?\x21B5 ?\n] [?$ ?\n]) ;改行
+        ))
+(set-face-background 'whitespace-space 'nil)
+(set-face-background 'whitespace-tab 'nil)
+(global-whitespace-mode t)
 
-(defadvice font-lock-mode (before my-font-lock-mode ())
-  (font-lock-add-keywords
-   major-mode
-   '(("\t" 0 my-face-b-2 append)
-     ("　" 0 my-face-b-1 append)
-     ("[ \t]+$" 0 my-face-u-1 append)
-     )))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
-
-;; 行末のスペースを表示する (どちらを使うか迷う……)
+;上記のwhitespace-modeの改行表示とは共存不可
 ;(setq-default show-trailing-whitespace t)
+;(set-face-attribute 'trailing-whitespace nil
+;                    :foreground "SteelBlue"
+;                    :background "#222222"
+;                    :underline t)
 
 ;-----------------------------------------------
 ; カーソル行をハイライト
@@ -690,6 +698,16 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
 ;        (t (self-insert-command (or arg 1)))))
         ))
+
+;; タブ幅の設定
+(defun set-tab-width (num)
+  (interactive "nTab Width: ")
+  (make-local-variable 'tab-stop-list)
+  (setq tab-width num)
+  (setq tab-stop-list ())
+  (while (< num 128)
+    (add-to-list 'tab-stop-list num t)
+    (setq num (+ num tab-width))))
 
 ;;
 ;=======================================================================
