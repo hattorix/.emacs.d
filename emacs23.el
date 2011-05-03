@@ -19,10 +19,8 @@
 ;=======================================================================
 ; elisp の追加読み込み PATH
 ;=======================================================================
-(setq load-path
-      (append (list
-                (concat siteinit-path "iiimecf"))
-              load-path))
+(add-to-list 'load-path (concat siteinit-path "iiimecf"))
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")
 
 ;;
 ;=======================================================================
@@ -33,14 +31,28 @@
 ; http://www.meadowy.org/~kawabata/iiimecf/
 ;=======================================================================
 (setq iiimcf-server-control-hostlist (list (concat "/tmp/.iiim-" (user-login-name) "/:0.0")))
-(setq is-atokx3 (if (= 0 (shell-command
+(setq use-atokx3 (if (= 0 (shell-command
                        (concat "netstat --unix -l | grep -q " (car iiimcf-server-control-hostlist))))
       (require 'iiimcf-sc nil t)))
 
-(when is-atokx3
+(when use-atokx3
   (setq iiimcf-server-control-default-language "ja")
   (setq iiimcf-server-control-default-input-method "atokx3")
   (setq default-input-method 'iiim-server-control))
+
+;;
+;=======================================================================
+; Mozc
+; - Mozc で日本語入力
+;
+; - Project homepage
+; # http://code.google.com/p/mozc/
+;=======================================================================
+(defvar use-mozc nil)
+(when (not use-atokx3)
+  (when (require 'mozc nil t)
+    (setq default-input-method "japanese-mozc")
+    (setq use-mozc t)))
 
 ;;
 ;=======================================================================
@@ -50,7 +62,7 @@
 ; - インストール
 ; # aptitude install anthy-el
 ;=======================================================================
-(when (not is-atokx3)
+(when (and (not use-atokx3) (not use-mozc))
   (require 'anthy)
   (setq default-input-method "japanese-anthy")
 
