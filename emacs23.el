@@ -131,8 +131,8 @@
 ;=======================================================================
 (cond (window-system  ; emacs using GTK
        ;; フレームのデフォルトフォントを指定
-       ;;(set-default-font "Migu 1M-15:spacing=0")
-       ;;(add-to-list 'default-frame-alist '(font . "Migu 1M-15:spacing=0"))
+       ;;(set-frame-font "Migu 1M-12:spacing=0")
+       ;;(add-to-list 'default-frame-alist '(font . "Migu 1M-12:spacing=0"))
        ;;(set-fontset-font (frame-parameter nil 'font)
        ;;                  'katakana-jisx0201
        ;;                  (font-spec :family "あずきフォント"))
