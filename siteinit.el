@@ -95,7 +95,7 @@
 
 (define-key isearch-mode-map "\C-f" 'isearch-yank-char)
 (define-key isearch-mode-map "\C-h" 'isearch-real-delete-char)
-(define-key isearch-mode-map "\C-l" 'isearch-edit-string)      ; C-lでキーワードの編集
+(define-key isearch-mode-map "\C-l" 'isearch-edit-string)      ;C-lでキーワードの編集
 (define-key isearch-mode-map "\C-o" 'isearch-occur)
 
 ;;
@@ -387,8 +387,13 @@
 ;=======================================================================
 ; スクロール設定
 ;=======================================================================
+;; スクロールの基本設定
+(setq scroll-conservatively 15                ;画面の下端 (上端) で移動したときのスクロール量
+      scroll-step 1                           ;(同上)
+      scroll-margin 0)                        ;まともに動かない
+
 ;; ホイールマウスでスクロールを有効に
-(mouse-wheel-mode)
+(mouse-wheel-mode t)
 
 ;; ホイールマウスのスクロール幅を設定（画面の８分の１）
 (global-set-key [mouse-4] '(lambda () (interactive) (scroll-down (/ (window-height) 8))))
@@ -397,11 +402,8 @@
 ;; スクロール時にカーソル位置を変えない
 (setq scroll-preserve-screen-position t)
 
-;; スクロールマージン
-(setq scroll-margin 20)
-
-;; スクロール時の移動量
-(setq scroll-conservatively 6)
+;; 画面スクロール時の重複行数
+(setq next-screen-context-lines 1)
 
 ;;
 ;=======================================================================
@@ -410,10 +412,12 @@
 (setq make-backup-files nil)                   ;バックアップファイルを作成しない
 (setq auto-save-timeout 30)                    ;自動保存する間隔（秒）。
 (setq auto-save-interval 300)                  ;300打鍵ごとに自動保存
+(setq delete-auto-save-files t)                ;終了時にオートセーブファイルを消す
 (setq visible-bell t)                          ;警告音を消す
-(setq kill-whole-line t)                       ;カーソルが行頭にある場合も行全体を削除
+(setq kill-whole-line t)                       ;カーソルが行頭にある場合は行全体を削除
 (setq ring-bell-function 'ignore)              ;エラー音をならなくする
 (setq delete-by-moving-to-trash t)             ;ごみ箱を有効
+(setq-default indent-tabs-mode nil)            ;インデントにはスペースを使う
 
 ;; インデントに使用する関数を指定
 (setq indent-line-function 'indent-relative-maybe)
@@ -427,22 +431,71 @@
 ;=======================================================================
 ; 表示設定
 ;=======================================================================
-;; 起動時の画面はいらない
-(setq inhibit-startup-message t)
+(auto-compression-mode t)                      ;日本語infoの文字化け防止
+(blink-cursor-mode 0)                          ;カーソルを点滅しないように
+(global-font-lock-mode t)                      ;font-lockを有効
+(set-scroll-bar-mode 'right)                   ;スクロールバーを右側に表示
+(setq inhibit-startup-message t)               ;起動時の画面はいらない
+(setq parse-sexp-ignore-comments t)            ;コメント内の括弧は無視
+(setq tab-stop-list '(4 8 12 16 20 24 28 32    ;タブストップ位置の設定
+                        36 40 48 52 56 60 64
+                        68 72 76 80))
+(setq-default indicate-empty-lines t)          ;ファイルの終端以降を可視化
+(setq-default indicate-buffer-boundaries 'right);右フリンジにバッファの開始と終端を表示
+(setq-default tab-width 4)                     ;タブ幅を4に設定
+(show-paren-mode t)                            ;対応する括弧をハイライト
+(tool-bar-mode 0)                              ;ツールバーを表示しない
 
-;; タイトル
-(setq frame-title-format     ;フレームのタイトル指定
+;; フレームのタイトル指定
+(setq frame-title-format
       (concat "%b - emacs@" system-name))
 
-;; 一般修飾
-(global-font-lock-mode t)    ;文字の色つけ
-(auto-compression-mode t)    ;日本語infoの文字化け防止
+;-----------------------------------------------
+; 配色
+;-----------------------------------------------
 
-;; 括弧
-(setq parse-sexp-ignore-comments t) ;コメント内の括弧は無視
+;; リージョン
+(set-face-foreground 'region "black")
+(set-face-background 'region "cyan2")
+;; モードライン
+(set-face-foreground 'mode-line "#000000")
+(set-face-background 'mode-line "grey")
+(set-face-attribute 'mode-line nil :box nil)   ;モードラインを平面化
+(set-face-foreground 'mode-line-inactive "#000000")
+(set-face-background 'mode-line-inactive "grey")
+(set-face-attribute 'mode-line-inactive nil :box nil)
 
-;; タブ幅を4に設定
-(setq-default tab-width 4)
+;-----------------------------------------------
+; バッファのデフォルト表示設定
+;-----------------------------------------------
+(setq default-frame-alist
+      (append (list
+               '(top . 0)                      ;Y 表示位置
+               '(left . 0)                     ;X 表示位置
+               '(width . 110)                  ;フレームの幅
+               '(height . 60)                  ;フレームの高さ
+               '(alpha . 90)                   ;透明度
+               '(foreground-color . "white")   ;文字色
+               '(background-color . "#222222") ;背景色
+               '(cursor-type  . box)           ;カーソルのタイプ
+               '(cursor-color . "cyan2")       ;カーソル色
+               '(border-color . "black")
+               '(mouse-color . "white")
+               )
+              default-frame-alist))
+(setq initial-frame-alist default-frame-alist)
+
+;-----------------------------------------------
+; モードライン
+;-----------------------------------------------
+;; 時計を表示
+(setq display-time-24hr-format t)
+(setq display-time-string-forms '(24-hours ":" minutes))
+(display-time-mode t)
+
+;; 行や列数号を表示
+(line-number-mode t)
+(column-number-mode t)
 
 ;-----------------------------------------------
 ; タブ、全角スペース、行末のスペースを表示させる
@@ -463,6 +516,9 @@
      )))
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
+
+;; 行末のスペースを表示する (どちらを使うか迷う……)
+;(setq-default show-trailing-whitespace t)
 
 ;-----------------------------------------------
 ; カーソル行をハイライト
@@ -536,53 +592,6 @@
 
 ;;
 ;=======================================================================
-; Customizer
-;=======================================================================
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(backup-by-copying nil)
- '(column-number-mode t)
- '(display-time-mode t)
- '(indent-tabs-mode nil)
- '(indicate-buffer-boundaries (quote right))
- '(make-backup-files nil)
- '(scroll-bar-mode (quote right))
- '(show-paren-mode t)
- '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60)))
- '(tool-bar-mode nil))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "cyan2" :foreground "black"))))
- '(mode-line ((t (:background "grey" :foreground "#000000"))))
- '(region ((t (:background "cyan2" :foreground "black")))))
-
-;;
-;=======================================================================
-; フレームサイズ・位置・色など
-;=======================================================================
-(setq initial-frame-alist
-      (append (list
-               '(top . 0)                      ;; Y 表示位置
-               '(left . 0)                     ;; X 表示位置
-               '(width . 110)                  ;; フレームの幅
-               '(height . 60)                  ;; フレームの高さ
-               '(foreground-color . "white")   ;; 文字色
-               '(background-color . "#222222") ;; 背景色
-               '(cursor-type  . box)           ;; カーソルのタイプ
-               '(border-color . "black")
-               '(mouse-color . "white")
-               )
-              initial-frame-alist))
-(setq default-frame-alist initial-frame-alist)
-
-;;
-;=======================================================================
 ; schema-mode using gauche
 ;=======================================================================
 (setq scheme-program-name "gosh -i")
@@ -607,7 +616,7 @@
 (defun my-kill-buffer (all)
   (interactive "P")
   (if all
-      ;; prefix argument があれば全バッファを削除
+      ;prefix argument があれば全バッファを削除
       (loop for buffer being the buffers
             do (kill-buffer buffer))
     (kill-buffer nil)))
@@ -616,7 +625,7 @@
 (defun my-revert-buffer (&optional coding-system)
   (interactive "zCoding system for visited file (default nil): \nP")
   (if coding-system
-      ;; prefix argument があればエンコード指定
+      ;prefix argument があればエンコード指定
       ;(revert-buffer-with-coding-system coding-system)
       t
     (revert-buffer t t)))
@@ -627,7 +636,7 @@
   (interactive)
   (switch-to-buffer (if (= tmp-buffer-count 0)
                         "*tmp*"
-                        ; TODO: 動的に数値を取得する
+                        ;TODO: 動的に数値を取得する
                         (concat "*tmp (" (number-to-string tmp-buffer-count) ")*")))
   (setq tmp-buffer-count (+ 1 tmp-buffer-count)))
 
@@ -688,7 +697,7 @@
 ;=======================================================================
 
 (global-set-key "\C-h" 'backward-delete-char)  ;バックスペース
-(global-set-key "\C-i" 'auto-complete)         ;文字列保管
+;(global-set-key "\C-i" 'auto-complete)         ;文字列保管
 (global-set-key [zenkaku-hankaku]
                 'toggle-input-method)          ;日本語入力
 (global-set-key "\C-o" 'toggle-input-method)   ;日本語入力
