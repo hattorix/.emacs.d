@@ -100,6 +100,30 @@
 
 ;;
 ;=======================================================================
+; dired
+;=======================================================================
+
+;; r -> C-x C-s でファイル名の編集
+(require 'wdired)
+
+;; スペースでマークする (FD like)
+(defun dired-toggle-mark (arg)
+  "Toggle the current (or next ARG) files."
+  ;; S.Namba Sat Aug 10 12:20:36 1996
+  (interactive "P")
+  (let ((dired-marker-char
+         (if (save-excursion (beginning-of-line)
+                             (looking-at " "))
+             dired-marker-char ?\040)))
+    (dired-mark arg)
+    ;(dired-previous-line 1)
+    ))
+
+(define-key dired-mode-map "r" 'wdired-change-to-wdired-mode) ;rで編集モードに
+(define-key dired-mode-map " " 'dired-toggle-mark)            ;スペースでマークをトグル
+
+;;
+;=======================================================================
 ; minibuf-isearch.el
 ; - ミニバッファで isearch 的な検索をする
 ;
