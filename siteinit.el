@@ -320,7 +320,7 @@
 ; - Git
 ;
 ; - Project page
-; http://github.com/jdhuntington/magit
+; http://gitorious.org/magit
 ;=======================================================================
 (autoload 'magit-status "magit/magit" nil t)
 
