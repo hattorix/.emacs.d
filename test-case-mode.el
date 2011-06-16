@@ -1460,8 +1460,7 @@ customize `test-case-cppunit-executable-name-func'"
 
 (defun test-case-googletest-failure-pattern ()
   (let ((file (regexp-quote (file-name-nondirectory (buffer-file-name)))))
-    (list (concat "^[0-9]+) test:.*\\(line: \\([0-9]+\\) \\(.+\\)\\)\n"
-                  "\\(\\(.+\n\\)+\\)\n\n")
+    (list (concat "^\\([^ ]*\\(" file "\\):\\([[:digit:]]+\\)\\): \\(.*\\)$")
           2 3 nil 1 4)))
 
 (defun test-case-googletest-backend (command)
