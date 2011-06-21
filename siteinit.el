@@ -410,17 +410,28 @@
 ;;
 ;=======================================================================
 ; c-mode, c++-mode
+; -- http://d.hatena.ne.jp/i_s/20091026/1256557730
 ;=======================================================================
 ;; インデント設定
 (add-hook 'c-mode-common-hook
           '(lambda ()
-             ; インデントスタイルの設定(gnu,bsd,k&r,stroustrup,linux,java)
+             ;; インデントスタイルの設定(gnu,bsd,k&r,stroustrup,linux,java)
              (c-set-style "stroustrup")
-             ; インデントに使う文字設定(t: タブ, nil: スペース)
+             ;; インデントに使う文字設定(t: タブ, nil: スペース)
              (setq indent-tabs-mode nil)
-             ; インデント幅
+             ;; インデント幅
              (setq c-basic-offset 4)
-             ; Enterで改行とインデント
+             ;; namespace {}の中はインデントしない
+             (c-set-offset 'innamespace 0)
+             ;; 関数の引数リストの閉じ括弧はインデントしない
+             (c-set-offset 'arglist-close 0)
+             ;; インライン関数の開始括弧はインデントしない
+             (c-set-offset 'inline-open 0)
+             ;; メンバ初期化リストの開始 `:' のインデント量
+             (c-set-offset 'member-init-intro 2)
+             ;; `;' を入力したら、自動改行+インデント
+             (c-toggle-auto-hungry-state 1)
+             ;; Enterで改行とインデント
              (define-key c-mode-base-map "\C-m" 'newline-and-indent)
              ))
 
