@@ -124,6 +124,16 @@
 
 ;;
 ;=======================================================================
+; grep-edit.el
+; - grep の検索結果を直接編集する
+;
+; - Project homepage
+; http://www.bookshelf.jp/soft/meadow_51.html#SEC782
+;=======================================================================
+(require 'grep-edit)
+
+;;
+;=======================================================================
 ; gdb-mode.el
 ; - デバッガ
 ;=======================================================================
@@ -749,7 +759,7 @@
 (defun search-word-cursor ()
   (interactive)
   (if (thing-at-point 'symbol)
-    (occur (thing-at-point 'symbol))
+      (occur (thing-at-point 'symbol))
     (call-interactively 'occur)))
 
 ;; 二分割されている画面を入れ替える
