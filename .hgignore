@@ -1,2 +1,7 @@
 syntax: glob
 *.elc
+*.log
+Makefile
+mmm-mode/elc-stamp
+mmm-mode/config.status
+mmm-mode/script

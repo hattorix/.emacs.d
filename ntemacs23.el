@@ -101,20 +101,17 @@
 ; フォント
 ;=======================================================================
 (cond (window-system
+       ;; フレームのデフォルトフォントを指定
        (set-frame-font "ARISAKA-等幅-12")
-       (set-fontset-font (frame-parameter nil 'font)
-                         'japanese-jisx0208
-                         '("ARISAKA-等幅" . "unicode-bmp"))
-                                        ;'("M+1VM+IPAG circle" . "unicode-bmp"))
+       (add-to-list 'default-frame-alist '(font . "ARISAKA-等幅-12"))
+       ;; 日本語フォントを指定
        (set-fontset-font (frame-parameter nil 'font)
                          'katakana-jisx0201
-                         '("ARISAKA-等幅" . "unicode-bmp"))
+                         (font-spec :family "あずきフォント"))
        (set-fontset-font (frame-parameter nil 'font)
-                         'ascii
-                         '("ARISAKA-等幅" . "unicode-bmp"))
-       (set-fontset-font (frame-parameter nil 'font)
-                         'unicode
-                         '("ARISAKA-等幅" . "unicode-bmp"))))
+                         'japanese-jisx0208
+                         (font-spec :family "あずきフォント"))))
+
 
 ;;
 ;=======================================================================
