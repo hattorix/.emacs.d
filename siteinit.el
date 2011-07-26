@@ -420,9 +420,16 @@
 ;;
 ;=======================================================================
 ; mercurial.el
-; - Mecurial
+; - Mercurial 付属の elisp
+;
+; C-c h h でキーバインディング一覧が見れる
+;
+; - 分かりやすい help
+; http://www.lares.dti.ne.jp/~foozy/fujiguruma/scm/mercurial-emacs.html
 ;=======================================================================
-(require 'mercurial)
+(when (require 'mercurial nil t)
+  ;; MQ (Mercurial Queue) で patch 管理をする
+  (require 'mq nil t))
 
 ;;
 ;=======================================================================
