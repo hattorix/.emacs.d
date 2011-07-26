@@ -34,6 +34,7 @@
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "anything"))
 (add-to-list 'load-path (concat siteinit-path "auto-complete"))
+(add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
 
 ;;
@@ -415,7 +416,7 @@
 ; - Project page
 ; http://philjackson.github.com/magit/
 ;=======================================================================
-(autoload 'magit-status "magit/magit" nil t)
+(autoload 'magit-status "magit" nil t)
 
 ;;
 ;=======================================================================
