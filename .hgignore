@@ -5,3 +5,12 @@ Makefile
 mmm-mode/elc-stamp
 mmm-mode/config.status
 mmm-mode/script
+\#*.*\#
+\.\#*.*
+
+# magit build files
+magit/magit-pkg.el
+magit/magit.info
+magit/magit.spec
+
+syntac: regexp

@@ -372,7 +372,7 @@
 (add-hook 'find-file-hook 'enable-test-case-mode-if-test)
 
 ;; コンパイル後に、テストの自動実行
-;(add-hook 'compilation-finish-functions 'test-case-compilation-finish-run-all)
+(add-hook 'compilation-finish-functions 'test-case-compilation-finish-run-all)
 
 ;;
 ;=======================================================================
@@ -413,7 +413,7 @@
 ; - Git
 ;
 ; - Project page
-; http://gitorious.org/magit
+; http://philjackson.github.com/magit/
 ;=======================================================================
 (autoload 'magit-status "magit/magit" nil t)
 
