@@ -131,6 +131,10 @@
 ; - Project homepage
 ; http://www.bookshelf.jp/soft/meadow_51.html#SEC782
 ;=======================================================================
+;; M-x grep 後バッファを編集
+;;   - C-c C-e で変更を適用
+;;   - C-c C-u で変更の破棄
+;;   - C-c C-r でリージョン内の変更の破棄
 (require 'grep-edit)
 
 ;;
@@ -142,7 +146,7 @@
 (setq gdb-many-windows t)
 
 ;; I/O バッファを開くかどうか
-(setq gdb-use-separate-io-buffer t) 
+(setq gdb-use-separate-io-buffer t)
 
 ;;
 ;=======================================================================
@@ -249,72 +253,61 @@
 ; - Project wiki
 ; http://www.emacswiki.org/cgi-bin/wiki/TabBarMode
 ;=======================================================================
-(require 'tabbar)
+(when (require 'tabbar nil t)
 
-(cond ((string= tabbar-version "2.0")
-       ;; Ubuntu 付属の tabbar
-       ;;
-       ;; タブをグループ化しない
-       (setq tabbar-buffer-groups-function
-             (lambda () (list "All Buffers")))
+  ;; タブをグループ化しない
+  (setq tabbar-buffer-groups-function
+        (lambda () (list "All Buffers")))
 
-       ;; `*scratch*' 以外の ` *'から始まるバッファーをリストしない
-       (setq tabbar-buffer-list-function
-             (lambda ()
-               (remove-if
-                (lambda (buffer)
-                  (unless (string-match-p "\\*\\(scratch\\|tmp\\)" (buffer-name buffer))
-                    (find (aref (buffer-name buffer) 0) " *")))
-                (buffer-list))))
+  ;; `*scratch*' 以外の ` *'から始まるバッファーをリストしない
+  (setq tabbar-buffer-list-function
+        (lambda ()
+          (remove-if
+           (lambda (buffer)
+             (unless (string-match-p "\\*\\(scratch\\|tmp\\)" (buffer-name buffer))
+               (find (aref (buffer-name buffer) 0) " *")))
+           (buffer-list))))
 
-       ;; 左端のボタンを無効化
-       (setq tabbar-home-button nil)
-       (setq tabbar-buffer-home-button nil)
-       (setq tabbar-scroll-left-button nil)
-       (setq tabbar-scroll-right-button nil)
+  ;; tabbar のバージョン違いごとの設定
+  (cond ((string= tabbar-version "2.0")
+         ;; Ubuntu 付属の tabbar
+         ;;
+         ;; 左端のボタンを無効化
+         (setq tabbar-home-button nil)
+         (setq tabbar-buffer-home-button nil)
+         (setq tabbar-scroll-left-button nil)
+         (setq tabbar-scroll-right-button nil)
 
-       (set-face-attribute 'tabbar-default nil :background "gray60")
-       (set-face-attribute 'tabbar-unselected nil :background "gray85" :foreground "gray30" :box nil)
-       (set-face-attribute 'tabbar-selected nil :background "#f2f2f6" :foreground "red" :box nil)
-       (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72" :style released-button))
+         ;; 色設定
+         (set-face-attribute 'tabbar-default nil :background "gray60")
+         (set-face-attribute 'tabbar-unselected nil :background "gray85" :foreground "gray30" :box nil)
+         (set-face-attribute 'tabbar-selected nil :background "#f2f2f6" :foreground "red" :box nil)
+         (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72" :style released-button))
 
-       ;; 幅設定
-       (setq tabbar-separator (list 0.5)))
+         ;; 幅設定
+         (setq tabbar-separator (list 0.5)))
 
-      (t
-       ;; NTEmacs 用 (tabbar-version 1.3)
-       ;;
-       ;; タブをグループ化しない
-       (setq tabbar-buffer-groups-function
-             (lambda (b) (list "All Buffers")))
+        (t
+         ;; NTEmacs 用 (tabbar-version 1.3)
+         ;;
+         ;; 左端のボタンを無効化
+         (setq tabbar-home-button-enabled "")
+         (setq tabbar-scroll-right-button-enabled "")
+         (setq tabbar-scroll-left-button-enabled "")
+         (setq tabbar-scroll-right-button-disabled "")
+         (setq tabbar-scroll-left-button-disabled "")
 
-       ;; `*scratch*' 以外の ` *'から始まるバッファーをリストしない
-       (setq tabbar-buffer-list-function
-             (lambda ()
-               (remove-if
-                (lambda (buffer)
-                  (unless (string-match-p "\\*\\(scratch\\|tmp\\)" (buffer-name buffer))
-                    (find (aref (buffer-name buffer) 0) " *")))
-                (buffer-list))))
+         ;; 色設定
+         (set-face-attribute 'tabbar-default-face nil :background "gray60")
+         (set-face-attribute 'tabbar-unselected-face nil :background "gray85" :foreground "gray30" :box nil)
+         (set-face-attribute 'tabbar-selected-face nil :background "#f2f2f6" :foreground "red" :box nil)
+         (set-face-attribute 'tabbar-button-face nil :box '(:line-width 1 :color "gray72" :style released-button))
 
-       ;; 左端のボタンを無効化
-       (setq tabbar-home-button-enabled "")
-       (setq tabbar-scroll-right-button-enabled "")
-       (setq tabbar-scroll-left-button-enabled "")
-       (setq tabbar-scroll-right-button-disabled "")
-       (setq tabbar-scroll-left-button-disabled "")
+         ;; 幅設定
+         (set-face-attribute 'tabbar-separator-face nil :height 0.7)))
 
-       ;; 色設定
-       (set-face-attribute 'tabbar-default-face nil :background "gray60")
-       (set-face-attribute 'tabbar-unselected-face nil :background "gray85" :foreground "gray30" :box nil)
-       (set-face-attribute 'tabbar-selected-face nil :background "#f2f2f6" :foreground "red" :box nil)
-       (set-face-attribute 'tabbar-button-face nil :box '(:line-width 1 :color "gray72" :style released-button))
-
-       ;; 幅設定
-       (set-face-attribute 'tabbar-separator-face nil :height 0.7)))
-
-;; tabbar を有効にする
-(tabbar-mode)
+  ;; tabbar を有効にする
+  (tabbar-mode))
 
 ;=======================================================================
 ; setnu.el, setnu+.el
@@ -437,6 +430,8 @@
 ; c-mode, c++-mode
 ; -- http://d.hatena.ne.jp/i_s/20091026/1256557730
 ;=======================================================================
+(add-to-list 'auto-mode-alist '("\\.h$" . c++-mode))
+
 ;; インデント設定
 (add-hook 'c-mode-common-hook
           '(lambda ()
@@ -454,11 +449,22 @@
              (c-set-offset 'inline-open 0)
              ;; メンバ初期化リストの開始 `:' のインデント量
              (c-set-offset 'member-init-intro 2)
+             ;; extern "C" 内のブロックのインデント量
+             (c-set-offset 'inextern-lang 0)
              ;; `;' を入力したら、自動改行+インデント
              (c-toggle-auto-hungry-state 1)
              ;; Enterで改行とインデント
              (define-key c-mode-base-map "\C-m" 'newline-and-indent)
-             ))
+             ;; ソースとヘッダの切り替え
+             (define-key c-mode-base-map [f4] 'ff-find-other-file)
+            ))
+
+;; ff-find-other-file でヘッダを探すパス
+(defcustom cc-search-directories
+  '("." "/usr/include" "/usr/local/include/*")
+  "*See the description of the `ff-search-directories' variable."
+  :type '(repeat directory)
+  :group 'ff)
 
 ;;
 ;=======================================================================
