@@ -132,10 +132,99 @@
 ; http://www.bookshelf.jp/soft/meadow_51.html#SEC782
 ;=======================================================================
 ;; M-x grep 後バッファを編集
-;;   - C-c C-e で変更を適用
+;;   - C-c C-c で変更を適用 (or C-c C-e)
 ;;   - C-c C-u で変更の破棄
 ;;   - C-c C-r でリージョン内の変更の破棄
 (require 'grep-edit)
+
+(defun my-grep-edit-setup ()
+  ;; (define-key grep-mode-map '[up] nil)
+  (define-key grep-mode-map "\C-c\C-c" 'grep-edit-finish-edit)
+  (message (substitute-command-keys "\\[grep-edit-finish-edit] to apply changes."))
+  (set (make-local-variable 'inhibit-read-only) t)
+  )
+(add-hook 'grep-setup-hook 'my-grep-edit-setup t)
+
+;;
+;=======================================================================
+; flymake.el
+; - 構文チェック
+;=======================================================================
+(require 'flymake)
+
+;; GUI の警告表示を無効
+(setq flymake-gui-warnings-enabled nil)
+
+;; 色設定
+(set-face-background 'flymake-errline "red4")
+(set-face-background 'flymake-warnline "dark slate blue")
+
+;; ファイル名が有効の時に flymake-mode にする関数
+(defun flymake-mode-if-enable-buffer ()
+  (if (not (null buffer-file-name)) (flymake-mode)))
+
+;; 汎用 flymake ルール
+(defun flymake-simple-generic-init (cmd &optional opts)
+  (let* ((temp-file  (flymake-init-create-temp-buffer-copy
+                      'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list cmd (append opts (list local-file)))))
+
+;; flymake のエラー/警告をミニバッファに表示
+(defun credmp/flymake-display-err-minibuf ()
+  "Displays the error/warning for the current line in the minibuffer"
+  (interactive)
+  (let* ((line-no             (flymake-current-line-no))
+         (line-err-info-list  (nth 0 (flymake-find-err-info flymake-err-info line-no)))
+         (count               (length line-err-info-list)))
+    (while (> count 0)
+      (when line-err-info-list
+        (let* ((file       (flymake-ler-file (nth (1- count) line-err-info-list)))
+               (full-file  (flymake-ler-full-file (nth (1- count) line-err-info-list)))
+               (text (flymake-ler-text (nth (1- count) line-err-info-list)))
+               (line       (flymake-ler-line (nth (1- count) line-err-info-list))))
+          (message "[%s] %s" line text)))
+      (setq count (1- count)))))
+
+;-----------------------------------------------
+; C, C++ で flymake を使う
+;-----------------------------------------------
+
+;; make 用の設定
+(defun flymake-get-make-cmdline (source base-dir)
+  (list "make"
+        (list "-s"
+              "-C" base-dir
+              "LANG=C"               ; 警告を英語表示 (warning) させる
+              (concat "CHK_SOURCES=" source)
+              "SYNTAX_CHECK_MODE=1"
+              "check-syntax")))
+
+;; C 用の設定
+;; (defun flymake-c-init ()
+;;   (flymake-simple-generic-init
+;;    "gcc" '("-Wall" "-Wextra" "-pedantic" "-fsyntax-only")))
+
+;; C++ 用の設定
+;; (defun flymake-cc-init ()
+;;   (flymake-simple-generic-init
+;;    "g++" '("-Wall" "-Wextra" "-pedantic" "-fsyntax-only")))
+
+(add-hook 'c-mode-common-hook 'flymake-mode-if-enable-buffer)
+
+;-----------------------------------------------
+; ruby で flymake を使う
+;-----------------------------------------------
+(defun flymake-ruby-init ()
+  (flymake-simple-generic-init
+   "ruby" '("-c")))
+
+(add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
+(push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+(push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+(push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
 
 ;;
 ;=======================================================================
