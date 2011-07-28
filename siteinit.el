@@ -929,6 +929,34 @@
     (add-to-list 'tab-stop-list num t)
     (setq num (+ num tab-width))))
 
+;;----------------------------------------------
+;; カーソル行を上下に移動
+;;----------------------------------------------
+; 下に移動
+(defun transpose-lines-down (&optional n)
+  "カーソル行を下に移動"
+  (interactive "p")
+  (if (not n)
+      (setq n 1))
+  (when (save-excursion (forward-line n))
+    (let ((column (current-column))
+          (beg (progn (move-beginning-of-line 1) (point)))
+          (end (progn (forward-line 1) (point))))
+      (insert (prog1
+                  (buffer-substring beg end)
+                (delete-region beg end)
+                (forward-line n)))
+      (forward-line -1)
+      (move-to-column column))))
+
+; 上に移動
+(defun transpose-lines-up (&optional n)
+  "カーソル行を上に移動"
+  (interactive "p")
+  (if (not n)
+      (setq n 1))
+  (transpose-lines-down (- n)))
+
 ;;
 ;=======================================================================
 ; キーカスタマイズ
@@ -954,6 +982,8 @@
 ;; 半ページ/スクロール
 (global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
 (global-set-key "\M-[" '(lambda () (interactive) (scroll-down (/ (window-height) 2))))
+(global-set-key "\M-p" 'transpose-lines-up)    ;カーソル行を上に移動
+(global-set-key "\M-n" 'transpose-lines-down)  ;カーソル行を下に移動
 
 (global-set-key [f1] 'help-for-help)           ;ヘルプ
 (global-set-key [f2] 'tabbar-backward-tab)     ;前のタブへ
