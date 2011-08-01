@@ -982,9 +982,9 @@
 ;; 半ページ/スクロール
 (global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
 (global-set-key "\M-[" '(lambda () (interactive) (scroll-down (/ (window-height) 2))))
-(global-set-key "\M-p" 'transpose-lines-up)    ;カーソル行を上に移動
-(global-set-key "\M-n" 'transpose-lines-down)  ;カーソル行を下に移動
 
+(global-set-key [M-up] 'transpose-lines-up)    ;カーソル行を上に移動
+(global-set-key [M-down] 'transpose-lines-down);カーソル行を下に移動
 (global-set-key [f1] 'help-for-help)           ;ヘルプ
 (global-set-key [f2] 'tabbar-backward-tab)     ;前のタブへ
 (global-set-key [S-f2] 'tabbar-backward-group) ;前のタブグループへ
