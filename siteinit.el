@@ -996,6 +996,8 @@
 (global-set-key [S-f10] 'gtags-pop-stack)      ;バックタグジャンプ
 (global-set-key [f12] 'redo)                   ;redo
 ;(global-set-key [f12] 'setnu-mode)             ;行番号表示
+(global-set-key [C-prior] 'tabbar-backward-tab);前のタブへ
+(global-set-key [C-next] 'tabbar-forward-tab)  ;次のタブへ
 
 (global-set-key "\C-cg" 'magit-status)         ;magit実行
 (global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
