@@ -1437,26 +1437,27 @@ customize `test-case-cppunit-executable-name-func'"
     executable))
 
 (defvar test-case-googletest-font-lock-keywords
-  (eval-when-compile
-    `((,(concat
-         "\\_<ASSERT_"  (regexp-opt '("TRUE" "FALSE" "EQ" "NE" "LT" "LE" "GT" "GE"
-                                      "STREQ" "STRNE" "STRCASEEQ" "STRCASENE"
-                                      "THROW" "ANY_THROW" "NO_THROW" "PRED1" "PRED2"
-                                      "PRED_FORMAT1" "PRED_FORMAT2"
-                                      "FLOAT_EQ" "DOUBLE_EQ" "NEAR"
-                                      "HRESULT_SUCCEEDED" "HRESULT_FAILED"
-                                      "DEATH" "DEATH_IF_SUPPORTED" "EXIT"
-                                      ) t)
-         "\\|EXPECT_" (regexp-opt '("TRUE" "FALSE" "EQ" "NE" "LT" "LE" "GT" "GE"
-                                    "STREQ" "STRNE" "STRCASEEQ" "STRCASENE"
-                                    "THROW" "ANY_THROW" "NO_THROW" "PRED1" "PRED2"
-                                    "PRED_FORMAT1" "PRED_FORMAT2"
-                                    "FLOAT_EQ" "DOUBLE_EQ" "NEAR"
-                                    "HRESULT_SUCCEEDED" "HRESULT_FAILED"
-                                    "DEATH" "DEATH_IF_SUPPORTED" "EXIT"
-                                    ))
-         "\\_>")
-       (0 'test-case-assertion prepend)))))
+  `(("\\_<\\(?:ASSERT\\|EXPECT\\)_[A-Z0-9]+\\_>" (0 (quote test-case-assertion) prepend))))
+  ;; (eval-when-compile
+  ;;   `((,(concat
+  ;;        "\\_<ASSERT_"  (regexp-opt '("TRUE" "FALSE" "EQ" "NE" "LT" "LE" "GT" "GE"
+  ;;                                     "STREQ" "STRNE" "STRCASEEQ" "STRCASENE"
+  ;;                                     "THROW" "ANY_THROW" "NO_THROW" "PRED1" "PRED2"
+  ;;                                     "PRED_FORMAT1" "PRED_FORMAT2"
+  ;;                                     "FLOAT_EQ" "DOUBLE_EQ" "NEAR"
+  ;;                                     "HRESULT_SUCCEEDED" "HRESULT_FAILED"
+  ;;                                     "DEATH" "DEATH_IF_SUPPORTED" "EXIT"
+  ;;                                     ) t)
+  ;;        "\\|EXPECT_" (regexp-opt '("TRUE" "FALSE" "EQ" "NE" "LT" "LE" "GT" "GE"
+  ;;                                   "STREQ" "STRNE" "STRCASEEQ" "STRCASENE"
+  ;;                                   "THROW" "ANY_THROW" "NO_THROW" "PRED1" "PRED2"
+  ;;                                   "PRED_FORMAT1" "PRED_FORMAT2"
+  ;;                                   "FLOAT_EQ" "DOUBLE_EQ" "NEAR"
+  ;;                                   "HRESULT_SUCCEEDED" "HRESULT_FAILED"
+  ;;                                   "DEATH" "DEATH_IF_SUPPORTED" "EXIT"
+  ;;                                   ))
+  ;;        "\\_>")
+  ;;      (0 'test-case-assertion prepend)))))
 
 (defun test-case-googletest-failure-pattern ()
   (let ((file (regexp-quote (file-name-nondirectory (buffer-file-name)))))
