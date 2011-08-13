@@ -933,6 +933,13 @@
     (add-to-list 'tab-stop-list num t)
     (setq num (+ num tab-width))))
 
+;; ウィンドウが分割されていたら次のウィンドウに移動、そうでなければ分割する
+(defun other-window-or-split ()
+  (interactive)
+  (when (one-window-p)
+    (split-window-horizontally))
+  (other-window 1))
+
 ;; 分割したウィンドウのリサイズ
 (defun my-window-resizer ()
   "Control window size and position."
@@ -1038,6 +1045,7 @@
 ;(global-set-key [f12] 'setnu-mode)             ;行番号表示
 (global-set-key [C-prior] 'tabbar-backward-tab);前のタブへ
 (global-set-key [C-next] 'tabbar-forward-tab)  ;次のタブへ
+(global-set-key [C-tab] 'other-window-or-split);次のウィンドウか分割か
 
 (global-set-key "\C-cg" 'magit-status)         ;magit実行
 (global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
