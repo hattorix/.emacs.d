@@ -273,6 +273,38 @@
 
 ;;
 ;=======================================================================
+; php-mode.el
+; - php プログラミング用のメジャーモード
+;
+; - Project homepage
+; http://sourceforge.net/projects/php-mode/
+;=======================================================================
+(require 'php-mode)
+
+(add-hook 'php-mode-hook
+          '(lambda ()
+             ;; インデントスタイルの設定(gnu,bsd,k&r,stroustrup,linux,java)
+             (c-set-style "stroustrup")
+             ;; 連続する空白の一括削除
+             (c-toggle-hungry-state t)
+             ;; コメント行のインデント
+             (setq c-comment-only-line-offset 0)
+             ;; コメントのスタイル
+             (setq comment-start "// "
+                   comment-end   ""
+                   comment-start-skip "// *")
+             ;; `;' を入力したら、自動改行+インデント
+             (c-toggle-auto-hungry-state 1)
+             ;; インデント サイズの設定
+             (setq tab-width 4
+                   c-basic-offset 4
+                   c-hanging-comment-ender-p nil
+                   indent-tabs-mode nil)))
+
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+
+;;
+;=======================================================================
 ; minibuf-isearch.el
 ; - ミニバッファで isearch 的な検索をする
 ;
@@ -520,7 +552,9 @@
 ;;
 ;=======================================================================
 ; c-mode, c++-mode
-; -- http://d.hatena.ne.jp/i_s/20091026/1256557730
+;
+; - 参考
+; http://d.hatena.ne.jp/i_s/20091026/1256557730
 ;=======================================================================
 (add-to-list 'auto-mode-alist '("\\.h$" . c++-mode))
 
@@ -1017,6 +1051,7 @@
 (global-set-key "\C-s" 'isearch-forward-regexp);正規表現で検索
 (global-set-key "\C-r" 'query-replace-regexp)  ;正規表現で置換
 (global-set-key "\C-x\C-g" 'my-revert-buffer)  ;カレントバッファを再読み込み
+(global-set-key "\C-xa" 'anything)             ;anything の開始
 (global-set-key "\C-xk" 'my-kill-buffer)       ;カレントバッファを閉じる
 (global-set-key "\C-xt" 'create-tmp-buffer)    ;作業用バッファを作る
 (global-set-key "\C-x\C-b" 'buffer-menu)       ;ウィンドウ分割しないバッファメニュー
