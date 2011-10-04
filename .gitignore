@@ -1,4 +1,3 @@
-syntax: glob
 *.elc
 *.log
 Makefile
@@ -12,5 +11,3 @@ mmm-mode/script
 magit/magit-pkg.el
 magit/magit.info
 magit/magit.spec
-
-syntac: regexp
