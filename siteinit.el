@@ -1013,6 +1013,17 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
+;; 折り返し表示をトグルする
+(defun toggle-truncate-lines ()
+  "折り返し表示をトグルする."
+  (interactive)
+  (if truncate-lines
+      (setq truncate-lines nil
+            truncate-partial-width-windows nil)
+    (setq truncate-lines t
+          truncate-partial-width-windows t))
+  (recenter))
+
 ;;----------------------------------------------
 ;; カーソル行を上下に移動
 ;;----------------------------------------------
@@ -1046,6 +1057,7 @@
 ; キーカスタマイズ
 ;=======================================================================
 
+(global-set-key "\C-cl" 'toggle-truncate-lines);折り返し表示のトグル
 (global-set-key "\C-h" 'backward-delete-char)  ;バックスペース
 ;(global-set-key "\C-i" 'auto-complete)         ;文字列保管
 (global-set-key [zenkaku-hankaku]
