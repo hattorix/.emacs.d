@@ -489,6 +489,9 @@
 ;; コンパイル後に、テストの自動実行
 (add-hook 'compilation-finish-functions 'test-case-compilation-finish-run-all)
 
+;; test-case-mode のキーマップ
+(define-key test-case-mode-map "\C-ct" 'test-case-run)
+
 ;;
 ;=======================================================================
 ; dabbrev-ja.el
