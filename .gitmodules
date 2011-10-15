@@ -1,0 +1,3 @@
+[submodule "anything"]
+	path = anything
+	url = git://repo.or.cz/anything-config.git
