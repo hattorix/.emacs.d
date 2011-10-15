@@ -1,11 +1,14 @@
 *.elc
 *.log
+\#*.*\#
+\.\#*.*
+*.swp
 Makefile
+
+# mmm-mode build files
 mmm-mode/elc-stamp
 mmm-mode/config.status
 mmm-mode/script
-\#*.*\#
-\.\#*.*
 
 # magit build files
 magit/magit-pkg.el
