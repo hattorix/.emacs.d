@@ -5,6 +5,9 @@
 *.swp
 Makefile
 
+# auto-complete-mode
+ac-comphist.dat
+
 # mmm-mode build files
 mmm-mode/elc-stamp
 mmm-mode/config.status
