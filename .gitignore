@@ -5,6 +5,8 @@
 *.swp
 Makefile
 
+auto-save-list/
+
 # auto-complete-mode
 ac-comphist.dat
 
