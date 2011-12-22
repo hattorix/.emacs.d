@@ -37,6 +37,7 @@
 (add-to-list 'load-path (concat siteinit-path "auto-complete"))
 (add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+(add-to-list 'load-path (concat siteinit-path "yasnippet"))
 
 ;;
 ;=======================================================================
@@ -480,7 +481,7 @@
 ; - 入力支援
 ;
 ; - Project homepage
-; http://code.google.com/p/yasnippet/
+; https://github.com/capitaomorte/yasnippet
 ;=======================================================================
 (require 'yasnippet)
 (yas/initialize)

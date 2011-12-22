@@ -1,3 +1,6 @@
 [submodule "anything"]
 	path = anything
 	url = git://repo.or.cz/anything-config.git
+[submodule "yasnippet"]
+	path = yasnippet
+	url = git://github.com/capitaomorte/yasnippet.git
