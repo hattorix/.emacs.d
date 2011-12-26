@@ -37,6 +37,7 @@
 (add-to-list 'load-path (concat siteinit-path "auto-complete"))
 (add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+(add-to-list 'load-path (concat siteinit-path "yasnippet"))
 
 ;;
 ;=======================================================================
@@ -216,6 +217,17 @@
 (add-hook 'c-mode-common-hook 'flymake-mode-if-enable-buffer)
 
 ;-----------------------------------------------
+; python で flymake を使う
+;-----------------------------------------------
+(defun flymake-python-init ()
+  (flymake-simple-generic-init
+   "pyflakes" ))
+
+(add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
+(push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
+(push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+
+;-----------------------------------------------
 ; ruby で flymake を使う
 ;-----------------------------------------------
 (defun flymake-ruby-init ()
@@ -225,7 +237,7 @@
 (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
 (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
 (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
-(push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+;; flymake-err-line-patterns は python の設定で吸収
 
 ;;
 ;=======================================================================
@@ -237,6 +249,18 @@
 
 ;; I/O バッファを開くかどうか
 (setq gdb-use-separate-io-buffer t)
+
+;;
+;=======================================================================
+; python-mode.el
+; - Python プログラミング用のメジャーモード
+;=======================================================================
+(add-hook 'python-mode-hook
+          '(lambda()
+             (setq indent-tabs-mode nil)
+             (setq indent-level 2)
+             (setq python-indent 2)
+             (setq tab-width 2))) 
 
 ;;
 ;=======================================================================
@@ -303,6 +327,17 @@
                    indent-tabs-mode nil)))
 
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+
+;;
+;=======================================================================
+; cmake-mode.el
+; - CMake ファイル編集用のメジャーモード
+;=======================================================================
+(when (require 'cmake-mode nil t)
+
+   (add-to-list 'auto-mode-alist '("CMakeLists\\.txt$" . cmake-mode))
+   (add-to-list 'auto-mode-alist '("\\.cmake$" . cmake-mode))
+  )
 
 ;;
 ;=======================================================================
@@ -446,7 +481,7 @@
 ; - 入力支援
 ;
 ; - Project homepage
-; http://code.google.com/p/yasnippet/
+; https://github.com/capitaomorte/yasnippet
 ;=======================================================================
 (require 'yasnippet)
 (yas/initialize)
@@ -659,6 +694,9 @@
 
 ;; 画面スクロール時の重複行数
 (setq next-screen-context-lines 1)
+
+;; スクロールを加速させる
+;(require 'scroll-speedup)
 
 ;;
 ;=======================================================================
