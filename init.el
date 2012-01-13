@@ -221,7 +221,7 @@
 ;-----------------------------------------------
 (defun flymake-python-init ()
   (flymake-simple-generic-init
-   "pyflakes" ))
+   "pyflakes"))
 
 (add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
 (push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
@@ -238,6 +238,17 @@
 (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
 (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
 ;; flymake-err-line-patterns は python の設定で吸収
+
+;-----------------------------------------------
+; PHP で flymake を使う
+;-----------------------------------------------
+(defun flymake-php-init ()
+  (flymake-simple-generic-init
+   "php" '("-l" "-f")))
+
+(add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
+(push '(".+\\.php$" flymake-php-init) flymake-allowed-file-name-masks)
+(push '("\\(.*\\) in \\(.*\\) on line \\([0-9]+\\)" 2 3 nil 1) flymake-err-line-patterns)
 
 ;;
 ;=======================================================================
