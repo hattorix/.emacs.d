@@ -37,6 +37,7 @@
 (add-to-list 'load-path (concat siteinit-path "auto-complete"))
 (add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+(add-to-list 'load-path (concat siteinit-path "virtualenv"))
 (add-to-list 'load-path (concat siteinit-path "yasnippet"))
 
 ;;
@@ -271,8 +272,13 @@
              (setq indent-tabs-mode nil)
              (setq indent-level 2)
              (setq python-indent 2)
-             (setq tab-width 2))) 
+             (setq tab-width 2)))
 
+;; virtualenv に対応させる
+(require 'virtualenv)
+;; virtualenv-minor-mode 開始時に、python shell を起動するかどうか
+(setq virtualenv-workon-starts-python nil)
+ 
 ;;
 ;=======================================================================
 ; ruby-mode.el
