@@ -162,6 +162,11 @@
 (set-face-background 'flymake-errline "red4")
 (set-face-background 'flymake-warnline "dark slate blue")
 
+;; flymake を有効にするファイル名のマスク
+;; - コマンド無い時にサブプロセスを kill する確認がうざいから、
+;;   自分で設定するようにする
+(setq flymake-allowed-file-name-masks '(()))
+
 ;; ファイル名が有効の時に flymake-mode にする関数
 (defun flymake-mode-if-enable-buffer ()
   (if (not (null buffer-file-name)) (flymake-mode)))
@@ -220,30 +225,40 @@
 ;-----------------------------------------------
 ; python で flymake を使う
 ;-----------------------------------------------
-(defun flymake-python-init ()
-  (flymake-simple-generic-init
-   "pyflakes"))
+(if (executable-find "pyflakes")
+    (progn
+      (defun flymake-python-init ()
+      (flymake-simple-generic-init
+       "pyflakes"))
 
-(add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
-(push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
-(push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+      (add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
+      (push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
+      (push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+      ))
 
 ;-----------------------------------------------
 ; ruby で flymake を使う
 ;-----------------------------------------------
-(defun flymake-ruby-init ()
-  (flymake-simple-generic-init
-   "ruby" '("-c")))
+(if (executable-find "ruby")
+    (progn
+      (defun flymake-ruby-init ()
+        (flymake-simple-generic-init
+         "ruby" '("-c")))
 
-(add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
-(push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
-(push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
-;; flymake-err-line-patterns は python の設定で吸収
+      (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
+      (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+      (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+      ;; flymake-err-line-patterns は python の設定で吸収
+      ))
 
 ;-----------------------------------------------
 ; PHP で flymake を使う
 ;-----------------------------------------------
-(add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
+(if (executable-find "php")
+    (progn
+      (add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
+      (push '("\\.php[345]?$" flymake-php-init) flymake-allowed-file-name-masks)
+      ))
 
 ;;
 ;=======================================================================
@@ -272,7 +287,7 @@
 (require 'virtualenv)
 ;; virtualenv-minor-mode 開始時に、python shell を起動するかどうか
 (setq virtualenv-workon-starts-python nil)
- 
+
 ;;
 ;=======================================================================
 ; ruby-mode.el
