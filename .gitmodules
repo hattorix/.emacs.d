@@ -4,3 +4,6 @@
 [submodule "virtualenv"]
 	path = virtualenv
 	url = https://github.com/aculich/virtualenv.el.git
+[submodule "yasnippet"]
+	path = yasnippet
+	url = git@github.com:hattorix/yasnippet.git
