@@ -1024,6 +1024,15 @@
       (occur (thing-at-point 'symbol))
     (call-interactively 'occur)))
 
+;; カーソル位置の単語を削除
+(defun kill-word-at-point ()
+  (interactive)
+  (let ((char (char-to-string (char-after (point)))))
+    (cond
+     ((string= " " char) (delete-horizontal-space))
+     ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
+     (t (forward-char) (backward-word) (kill-word 1)))))
+
 ;; 二分割されている画面を入れ替える
 (defun swap-screen ()
   "Swap two screen,leaving cursor at current window."
@@ -1190,6 +1199,7 @@
 (global-set-key "\C-]" 'match-paren)           ;対応する括弧に移動
 (global-set-key "\C-\M-y" 'kill-summary)       ;kill-ring 一覧から yank
 (global-set-key "\M-k" '(lambda () (interactive) (kill-line 0))) ;;行頭まで削除
+(global-set-key "\M-d" 'kill-word-at-point)    ;カーソル下の単語を削除
 (global-set-key "\M-g" 'goto-line)             ;指定行へ移動
 ;; 半ページ/スクロール
 (global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
