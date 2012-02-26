@@ -1078,11 +1078,18 @@
     (add-to-list 'tab-stop-list num t)
     (setq num (+ num tab-width))))
 
+;; 縦横幅に応じて画面を分割
+(defun split-window-conditional ()
+  (interactive)
+  (if (> (* (window-height) 2) (window-width))
+      (split-window-vertically)
+    (split-window-horizontally)))
+
 ;; ウィンドウが分割されていたら次のウィンドウに移動、そうでなければ分割する
 (defun other-window-or-split ()
   (interactive)
   (when (one-window-p)
-    (split-window-horizontally))
+    (split-window-conditional))
   (other-window 1))
 
 ;; 分割したウィンドウのリサイズ
