@@ -4,6 +4,7 @@
 \.\#*.*
 *.swp
 Makefile
+server/
 
 auto-save-list/
 
