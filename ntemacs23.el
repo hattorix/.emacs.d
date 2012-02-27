@@ -72,6 +72,9 @@
     (setq char-width-table table)))
 (set-east-asian-ambiguous-width 2)
 
+;; 標準のファイル エンコーディングを UTF-8 に
+(set-default-coding-systems 'utf-8)
+
 ;;
 ;=======================================================================
 ; elisp の追加読み込み PATH
