@@ -643,6 +643,10 @@
 ;=======================================================================
 (autoload 'magit-status "magit" nil t)
 
+;; vc-mode 無効化
+;; - http://bit.ly/xPV6eW
+(eval-after-load "vc" '(remove-hook 'find-file-hooks 'vc-find-file-hook))
+
 ;;
 ;=======================================================================
 ; mercurial.el
