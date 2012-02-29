@@ -38,6 +38,7 @@
 (add-to-list 'load-path (concat siteinit-path "coffee-mode"))
 (add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+(add-to-list 'load-path (concat siteinit-path "scala-mode"))
 (add-to-list 'load-path (concat siteinit-path "virtualenv"))
 (add-to-list 'load-path (concat siteinit-path "yasnippet"))
 
@@ -273,6 +274,12 @@
 (setq gdb-use-separate-io-buffer t)
 
 ;;
+;=======================================================================
+; scala-mode.el
+; - Scala プログラミング用のメジャーモード
+;=======================================================================
+(require 'scala-mode-auto)
+
 ;=======================================================================
 ; python-mode.el
 ; - Python プログラミング用のメジャーモード
