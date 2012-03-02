@@ -27,7 +27,6 @@
   ;; Linux の Emacs23
   ((= emacs-major-version 23)
    (load (concat siteinit-path "emacs23"))))
-  ;)
 
 ;;
 ;=======================================================================
@@ -286,10 +285,11 @@
 ;=======================================================================
 (add-hook 'python-mode-hook
           '(lambda()
-             (setq indent-tabs-mode nil)
-             (setq indent-level 2)
-             (setq python-indent 2)
-             (setq tab-width 2)))
+             ;; インデント サイズの設定
+             (setq tab-width 2
+                   python-indent 2
+                   indent-level 2
+                   indent-tabs-mode nil)))
 
 ;; virtualenv に対応させる
 (require 'virtualenv)
@@ -403,10 +403,10 @@
     (setq coffee-debug-mode t)
 
     ;; Emacs key binding
-    (define-key coffee-mode-map [(meta r)] 'coffee-compile-buffer)
+    (define-key coffee-mode-map "\M-r" 'coffee-compile-buffer)
 
     ;; Riding edge.
-    (setq coffee-command "~/dev/coffee")
+    (setq coffee-command "coffee")
 
     ;; Compile '.coffee' files on every save
     (and (file-exists-p (buffer-file-name))
