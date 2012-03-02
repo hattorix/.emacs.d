@@ -368,6 +368,20 @@
 ; http://code.google.com/p/js2-mode/
 ;=======================================================================
 (autoload 'js2-mode "js2" nil t)
+
+;; インデントの関数の再設定
+(add-hook 'js2-mode-hook
+          #'(lambda ()
+              (require 'js)
+
+              ;; インデントスタイルを Google JavaScript Style に合わせる
+              (set (make-local-variable 'indent-line-function) 'js-indent-line)
+
+              ;; インデント サイズの設定
+              (setq js-indent-level 2
+                    js-expr-indent-offset 2
+                    indent-tabs-mode nil)))
+
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;;
@@ -391,7 +405,7 @@
     (set 'tab-width 2)
 
     ;; If you don't have js2-mode
-    (setq coffee-js-mode 'javascript-mode)
+    ;(setq coffee-js-mode 'javascript-mode)
 
     ;; If you don't want your compiled files to be wrapped
     (setq coffee-args-compile '("-c" "--bare"))
