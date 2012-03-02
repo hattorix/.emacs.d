@@ -226,40 +226,37 @@
 ;-----------------------------------------------
 ; python で flymake を使う
 ;-----------------------------------------------
-(if (executable-find "pyflakes")
-    (progn
-      (defun flymake-python-init ()
-      (flymake-simple-generic-init
-       "pyflakes"))
+(when (executable-find "pyflakes")
+  (defun flymake-python-init ()
+    (flymake-simple-generic-init
+     "pyflakes"))
 
-      (add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
-      (push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
-      (push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
-      ))
+  (add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
+  (push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
+  (push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+  )
 
 ;-----------------------------------------------
 ; ruby で flymake を使う
 ;-----------------------------------------------
-(if (executable-find "ruby")
-    (progn
-      (defun flymake-ruby-init ()
-        (flymake-simple-generic-init
-         "ruby" '("-c")))
+(when (executable-find "ruby")
+  (defun flymake-ruby-init ()
+    (flymake-simple-generic-init
+     "ruby" '("-c")))
 
-      (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
-      (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
-      (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
-      ;; flymake-err-line-patterns は python の設定で吸収
-      ))
+  (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
+  (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+  (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+  ;; flymake-err-line-patterns は python の設定で吸収
+  )
 
 ;-----------------------------------------------
 ; PHP で flymake を使う
 ;-----------------------------------------------
-(if (executable-find "php")
-    (progn
-      (add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
-      (push '("\\.php[345]?$" flymake-php-init) flymake-allowed-file-name-masks)
-      ))
+(when (executable-find "php")
+  (add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
+  (push '("\\.php[345]?$" flymake-php-init) flymake-allowed-file-name-masks)
+  )
 
 ;;
 ;=======================================================================
