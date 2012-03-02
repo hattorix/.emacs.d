@@ -155,6 +155,7 @@
 ; - 構文チェック
 ;=======================================================================
 (require 'flymake)
+(require 'rfringe)
 
 ;; GUI の警告表示を無効
 (setq flymake-gui-warnings-enabled nil)
