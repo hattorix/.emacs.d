@@ -212,17 +212,25 @@
               "SYNTAX_CHECK_MODE=1"
               "check-syntax")))
 
+(defun flymake-simple-make-or-generic-init (cmd &optional opts)
+  (if (file-exists-p "Makefile")
+      (flymake-simple-make-init)
+    (flymake-simple-generic-init cmd opts)))
+
 ;; C 用の設定
-;; (defun flymake-c-init ()
-;;   (flymake-simple-generic-init
-;;    "gcc" '("-Wall" "-Wextra" "-pedantic" "-fsyntax-only")))
+(defun flymake-c-init ()
+  (flymake-simple-make-or-generic-init
+   "gcc" '("-Wall" "-Wextra" "-pedantic" "-fsyntax-only")))
 
 ;; C++ 用の設定
-;; (defun flymake-cc-init ()
-;;   (flymake-simple-generic-init
-;;    "g++" '("-Wall" "-Wextra" "-pedantic" "-fsyntax-only")))
+(defun flymake-cc-init ()
+  (flymake-simple-make-or-generic-init
+   "g++" '("-Wall" "-Wextra" "-fsyntax-only")))
 
 (add-hook 'c-mode-common-hook 'flymake-mode-if-enable-buffer)
+(push '("\\.c$" flymake-c-init) flymake-allowed-file-name-masks)
+(push '("\\.\\([ch]pp\\|cc\\|h\\|cxx\\)$" flymake-cc-init) flymake-allowed-file-name-masks)
+(push '("\\(.+\\):\\([0-9]+\\):\\([0-9]+\\): \\(.+\\)" 1 2 nil 4) flymake-err-line-patterns)
 
 ;-----------------------------------------------
 ; python で flymake を使う
@@ -234,7 +242,7 @@
 
   (add-hook 'python-mode-hook 'flymake-mode-if-enable-buffer)
   (push '("\\.py$" flymake-python-init) flymake-allowed-file-name-masks)
-  (push '("^\\(.*\\):\\([0-9]+\\): ?\\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
+  (push '("^\\([^:]+\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3) flymake-err-line-patterns)
   )
 
 ;-----------------------------------------------
@@ -246,7 +254,7 @@
      "ruby" '("-c")))
 
   (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
-  (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+  (push '("\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
   (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
   ;; flymake-err-line-patterns は python の設定で吸収
   )
