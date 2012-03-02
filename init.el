@@ -565,15 +565,6 @@
   ;; tabbar を有効にする
   (tabbar-mode))
 
-;=======================================================================
-; setnu.el, setnu+.el
-; - 行番号表示モード
-;
-; - Project wiki
-; http://www.emacswiki.org/emacs/LineNumbers#toc9
-;=======================================================================
-(autoload 'setnu-mode "setnu+" nil t)
-
 ;;
 ;=======================================================================
 ; yasnippet.el
@@ -946,6 +937,39 @@
 (setq hl-line-face 'hlline-face)  ; or 'underline
 (global-hl-line-mode)
 
+;-----------------------------------------------
+; lineum
+; - 行番号表示
+;
+; - Emacs wiki
+; http://www.emacswiki.org/emacs/LineNumbers
+; - 次のコマンドで行番号表示をトグル
+; M-x linum-mode
+;-----------------------------------------------
+;(global-linum-mode 1)                   ;全バッファで行の表示
+
+(eval-after-load 'linum
+  '(linum-face-settings))
+
+(defun linum-face-settings ()
+  ;; 行部分のフォーマット
+  (defun linum-format-func (line)
+    (propertize (format
+                 (let ((w (length (number-to-string
+                                   (count-lines (point-min) (point-max))))))
+                   (concat " %" (number-to-string w) "d")) line) 'face 'linum))
+  (setq linum-format 'linum-format-func)
+
+  ;; 色設定
+  (set-face-attribute 'linum nil :background "SkyBlue4" :foreground "light gray")
+
+  ;; linum-mode が重いのをどうにかする
+  ;; - http://d.hatena.ne.jp/daimatz/20120215/1329248780
+  (setq linum-delay t)
+  (defadvice linum-schedule (around my-linum-schedule () activate)
+    (run-with-idle-timer 0.2 nil #'linum-update-current))
+  )
+
 ;;
 ;=======================================================================
 ; バッファ設定
@@ -1260,3 +1284,8 @@
 (global-set-key "\C-cr" 'my-window-resizer)    ;ウィンドウのリサイズ
 
 (put 'set-goal-column 'disabled nil)
+
+;;
+;=======================================================================
+; Customizer
+;=======================================================================
