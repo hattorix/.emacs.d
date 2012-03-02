@@ -230,7 +230,7 @@
 (add-hook 'c-mode-common-hook 'flymake-mode-if-enable-buffer)
 (push '("\\.c$" flymake-c-init) flymake-allowed-file-name-masks)
 (push '("\\.\\([ch]pp\\|cc\\|h\\|cxx\\)$" flymake-cc-init) flymake-allowed-file-name-masks)
-(push '("\\(.+\\):\\([0-9]+\\):\\([0-9]+\\): \\(.+\\)" 1 2 nil 4) flymake-err-line-patterns)
+(push '("\\(.+\\):\\([0-9]+\\):\\([0-9]+\\): \\(\\(エラー\\|警告\\):[ \t\n]*\\(.+\\)\\)" 1 2 nil 4) flymake-err-line-patterns)
 
 ;-----------------------------------------------
 ; python で flymake を使う
@@ -265,6 +265,22 @@
 (when (executable-find "php")
   (add-hook 'php-mode-hook 'flymake-mode-if-enable-buffer)
   (push '("\\.php[345]?$" flymake-php-init) flymake-allowed-file-name-masks)
+  )
+
+;-----------------------------------------------
+; CoffeeScript で flymake を使う
+;-----------------------------------------------
+(when (executable-find "coffeelint")
+  (defun flymake-coffeescript-init ()
+    (flymake-simple-generic-init
+     ;; なぜか動かない
+     ;;"coffeelint" (if (file-exists-p "~/.coffeelint.conf")
+     ;;                 '("-f" "~/.coffeelint.conf"))))
+     "coffeelint"))
+
+  (add-hook 'coffee-mode-hook 'flymake-mode-if-enable-buffer)
+  (push '("\\.coffee$" flymake-coffeescript-init) flymake-allowed-file-name-masks)
+  (push '("^\\([^#]+\\)#\\([0-9]+\\) : \\(\\(warn\\|error\\) : \\(.*\\)\\)$" 1 2 nil 3) flymake-err-line-patterns)
   )
 
 ;;
