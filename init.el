@@ -198,6 +198,22 @@
           (message "[%s] %s" line text)))
       (setq count (1- count)))))
 
+;; flymake の一時ファイルに、システムの tmp ディレクトリを指定する関数
+(defun flymake-create-temp-intemp (file-name prefix)
+  (unless (stringp file-name)
+    (error "Invalid file-name"))
+  (or prefix
+      (setq prefix "flymake"))
+  (let* ((name (concat
+                (file-name-nondirectory
+                 (file-name-sans-extension file-name))
+                "_" prefix))
+         (ext  (concat "." (file-name-extension file-name)))
+         (temp-name (make-temp-file name nil ext))
+         )
+    (flymake-log 3 "create-temp-intemp: file=%s temp=%s" file-name temp-name)
+    temp-name))
+
 ;-----------------------------------------------
 ; C, C++ で flymake を使う
 ;-----------------------------------------------
@@ -256,6 +272,18 @@
   (add-hook 'ruby-mode-hook 'flymake-mode-if-enable-buffer)
   (push '("\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
   (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+  ;; flymake-err-line-patterns は python の設定で吸収
+  )
+
+;-----------------------------------------------
+; Scala で flymake を使う
+;-----------------------------------------------
+(when (executable-find "scalac")
+  (defun flymake-scala-init ()
+    (flymake-simple-generic-init
+     "scalac" (list "-d" temporary-file-directory)))
+
+  (push '("\\.scala$" flymake-scala-init) flymake-allowed-file-name-masks)
   ;; flymake-err-line-patterns は python の設定で吸収
   )
 
