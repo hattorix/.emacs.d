@@ -1309,7 +1309,7 @@
 (global-set-key "\C-]" 'match-paren)           ;対応する括弧に移動
 (global-set-key "\C-\M-y" 'kill-summary)       ;kill-ring 一覧から yank
 (global-set-key "\M-k" '(lambda () (interactive) (kill-line 0))) ;;行頭まで削除
-(global-set-key "\M-d" 'kill-word-at-point)    ;カーソル下の単語を削除
+;(global-set-key "\M-d" 'kill-word-at-point)    ;カーソル下の単語を削除
 (global-set-key "\M-g" 'goto-line)             ;指定行へ移動
 ;; 半ページ/スクロール
 (global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
