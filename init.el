@@ -870,6 +870,7 @@
 (setq delete-by-moving-to-trash t)             ;ごみ箱を有効
 (setq-default indent-tabs-mode nil)            ;インデントにはスペースを使う
 (setq require-final-newline t)                 ;ファイル末尾に改行追加
+(fset 'yes-or-no-p 'y-or-n-p)                  ;"yes or no"を"y or n"に
 
 ;; インデントに使用する関数を指定
 (setq indent-line-function 'indent-relative-maybe)
