@@ -493,6 +493,18 @@
 
 ;;
 ;=======================================================================
+; markdown-mode.el
+; - Markdown ファイル編集用のメジャーモード
+;
+; - Project page
+; http://jblevins.org/projects/markdown-mode/
+;=======================================================================
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown$" . markdown-mode))
+
+;;
+;=======================================================================
 ; minibuf-isearch.el
 ; - ミニバッファで isearch 的な検索をする
 ;
