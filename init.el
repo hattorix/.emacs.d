@@ -971,12 +971,14 @@
 (set-face-foreground 'region "black")
 (set-face-background 'region "cyan2")
 ;; モードライン
-(set-face-foreground 'mode-line "#000000")
-(set-face-background 'mode-line "grey")
-(set-face-attribute 'mode-line nil :box nil)   ;モードラインを平面化
-(set-face-foreground 'mode-line-inactive "#000000")
-(set-face-background 'mode-line-inactive "grey")
-(set-face-attribute 'mode-line-inactive nil :box nil)
+(set-face-attribute  'mode-line nil
+                     :foreground "#000000"
+                     :background "grey"
+                     :box nil)   ;モードラインを平面化
+(set-face-attribute  'mode-line-inactive nil
+                     :foreground "#000000"
+                     :background "grey"
+                     :box nil)
 
 ;-----------------------------------------------
 ; バッファのデフォルト表示設定
