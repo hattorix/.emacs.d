@@ -888,8 +888,10 @@
 ;=======================================================================
 ;; スクロールの基本設定
 (setq scroll-conservatively 15                ;画面の下端 (上端) で移動したときのスクロール量
-      scroll-step 1                           ;(同上)
-      scroll-margin 0)                        ;まともに動かない
+      ;; scroll-step 1                           ;(同上)
+      scroll-preserve-screen-position t       ;カーソル位置を維持する (Page-Up, Page-Down とか)
+      scroll-margin 0                         ;上下マージン
+      )
 
 ;; ホイールマウスでスクロールを有効に
 (mouse-wheel-mode t)
