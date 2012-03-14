@@ -1017,18 +1017,24 @@
 ; M-x delete-trailing-whitespace
 ;-----------------------------------------------
 (require 'whitespace)
-(setq whitespace-style '(tabs tab-mark
+(setq whitespace-style '(face
+                         tabs tab-mark
                          spaces space-mark
                          newline newline-mark
+                         trailing
                          ))
 (setq whitespace-space-regexp "\\(\u3000+\\)")
 (setq whitespace-display-mappings
-      '((space-mark ?\u3000 [?\u25a1])            ;全角スペース
-        (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])      ;タブ
-        (newline-mark ?\n [?\x21B5 ?\n] [?$ ?\n]) ;改行
+      '((space-mark   ?\u3000 [?\u25a1])               ;全角スペース
+        (tab-mark     ?\t     [?\xBB ?\t]   [?\\ ?\t]) ;タブ
+        (newline-mark ?\n     [?\x21B5 ?\n] [?$ ?\n])  ;改行
         ))
 (set-face-background 'whitespace-space 'nil)
 (set-face-background 'whitespace-tab 'nil)
+(set-face-attribute  'whitespace-trailing nil
+                     :foreground "SteelBlue"
+                     :background "#222222"
+                     :underline  t)
 (global-whitespace-mode t)
 
 ;上記のwhitespace-modeの改行表示とは共存不可
