@@ -111,6 +111,9 @@
 ;; r -> C-x C-s でファイル名の編集
 (require 'wdired)
 
+;; 二画面モード
+(setq dired-dwim-target t)
+
 ;; スペースでマークする (FD like)
 (defun dired-toggle-mark (arg)
   "Toggle the current (or next ARG) files."
