@@ -25,7 +25,7 @@
   ((and (equal system-type 'windows-nt) (= emacs-major-version 23))
    (load (concat siteinit-path "ntemacs23")))
   ;; Linux の Emacs23
-  ((= emacs-major-version 23)
+  ((>= emacs-major-version 23)
    (load (concat siteinit-path "emacs23"))))
 
 ;;
