@@ -58,7 +58,12 @@
 (when (not use-atokx3)
   (when (require 'mozc nil t)
     (setq default-input-method "japanese-mozc")
-    (setq use-mozc t)))
+    (setq use-mozc t)
+
+    ;; emacs24 だと、オーバーレイ表示が上手くいかない問題への対応
+    (if (> emacs-major-version 23)
+      (setq mozc-candidate-style 'echo-area))
+    ))
 
 ;;
 ;=======================================================================
