@@ -534,8 +534,8 @@
 
 ;;
 ;=======================================================================
-; markdown-mode.el
-; - Markdown ファイル編集用のメジャーモード
+; csv-mode
+; - CSV ファイル編集用のメジャーモード
 ;
 ; - Emacs wiki
 ; http://emacswiki.org/emacs/CsvMode
