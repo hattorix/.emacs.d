@@ -13,3 +13,6 @@
 [submodule "magit"]
 	path = magit
 	url = git://github.com/magit/magit.git
+[submodule "popwin"]
+	path = popwin
+	url = https://github.com/m2ym/popwin-el.git

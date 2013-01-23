@@ -37,6 +37,7 @@
 (add-to-list 'load-path (concat siteinit-path "coffee-mode"))
 (add-to-list 'load-path (concat siteinit-path "magit"))
 (add-to-list 'load-path (concat siteinit-path "mmm-mode"))
+(add-to-list 'load-path (concat siteinit-path "popwin"))
 (add-to-list 'load-path (concat siteinit-path "scala-mode"))
 (add-to-list 'load-path (concat siteinit-path "virtualenv"))
 (add-to-list 'load-path (concat siteinit-path "yasnippet"))
@@ -761,6 +762,30 @@
 (define-key anything-map "\C-n" 'anything-next-line)
 (define-key anything-map "\C-v" 'anything-next-page)
 (define-key anything-map "\M-v" 'anything-previous-page)
+
+;;
+;=======================================================================
+; popwin.el
+; - ヘルプバッファや補完バッファをポップアップで表示
+;
+; - Project page
+; https://github.com/m2ym/popwin-el
+;=======================================================================
+(require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
+
+;; M-x anything
+(setq anything-samewindow nil)
+(push '("*anything*" :height 20) popwin:special-display-config)
+
+;; M-x dired-jump-other-window
+(push '(dired-mode :position top) popwin:special-display-config)
+
+;; M-!
+(push "*Shell Command Output*" popwin:special-display-config)
+
+;; M-x compile
+(push '(compilation-mode :noselect t) popwin:special-display-config)
 
 ;;
 ;=======================================================================
