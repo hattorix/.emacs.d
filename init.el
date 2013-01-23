@@ -321,13 +321,14 @@
   (defun flymake-coffeescript-init ()
     (flymake-simple-generic-init
      ;; なぜか動かない
-     ;;"coffeelint" (if (file-exists-p "~/.coffeelint.conf")
-     ;;                 '("-f" "~/.coffeelint.conf"))))
-     "coffeelint"))
+     ;;"coffeelint" (append (if (file-exists-p "~/.coffeelint.conf")
+     ;;                       '("-f" "~/.coffeelint.conf"))
+     ;;                     (list "--csv"))))
+     "coffeelint" '("--csv")))
 
   (add-hook 'coffee-mode-hook 'flymake-mode-if-enable-buffer)
   (push '("\\.coffee$" flymake-coffeescript-init) flymake-allowed-file-name-masks)
-  (push '("^\\([^#]+\\)#\\([0-9]+\\) : \\(\\(warn\\|error\\) : \\(.*\\)\\)$" 1 2 nil 3) flymake-err-line-patterns)
+  (push '("^\\([^,]+\\),\\([0-9]+\\),\\(\\(warn\\|error\\),\\(.*\\)\\)$" 1 2 nil 3) flymake-err-line-patterns)
   )
 
 ;;
