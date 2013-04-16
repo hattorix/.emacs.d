@@ -25,8 +25,7 @@
 ;=======================================================================
 ; elisp の追加読み込み PATH
 ;=======================================================================
-(add-to-list 'load-path (concat siteinit-path "iiimecf"))
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")
+(add-to-list 'load-path (concat siteinit-path "iiimecf") t)
 
 ;;
 ;=======================================================================

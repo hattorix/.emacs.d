@@ -32,16 +32,16 @@
 ;=======================================================================
 ; elisp の追加読み込み PATH
 ;=======================================================================
-(add-to-list 'load-path (concat siteinit-path "anything"))
-(add-to-list 'load-path (concat siteinit-path "auto-complete"))
-(add-to-list 'load-path (concat siteinit-path "coffee-mode"))
-(add-to-list 'load-path (concat siteinit-path "magit"))
-(add-to-list 'load-path (concat siteinit-path "mmm-mode"))
-(add-to-list 'load-path (concat siteinit-path "popwin"))
-(add-to-list 'load-path (concat siteinit-path "scala-mode"))
-(add-to-list 'load-path (concat siteinit-path "virtualenv"))
-(add-to-list 'load-path (concat siteinit-path "yasnippet"))
-(add-to-list 'load-path (concat siteinit-path "elisp/init-loader"))
+(add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
+(add-to-list 'load-path (concat siteinit-path "anything") t)
+(add-to-list 'load-path (concat siteinit-path "auto-complete") t)
+(add-to-list 'load-path (concat siteinit-path "coffee-mode") t)
+(add-to-list 'load-path (concat siteinit-path "magit") t)
+(add-to-list 'load-path (concat siteinit-path "mmm-mode") t)
+(add-to-list 'load-path (concat siteinit-path "popwin") t)
+(add-to-list 'load-path (concat siteinit-path "scala-mode") t)
+(add-to-list 'load-path (concat siteinit-path "virtualenv") t)
+(add-to-list 'load-path (concat siteinit-path "yasnippet") t)
 
 ;;
 ;=======================================================================
