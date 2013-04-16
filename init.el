@@ -41,6 +41,7 @@
 (add-to-list 'load-path (concat siteinit-path "scala-mode"))
 (add-to-list 'load-path (concat siteinit-path "virtualenv"))
 (add-to-list 'load-path (concat siteinit-path "yasnippet"))
+(add-to-list 'load-path (concat siteinit-path "elisp/init-loader"))
 
 ;;
 ;=======================================================================
@@ -50,6 +51,17 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
+
+;;
+;=======================================================================
+; 設定ファイル分割フレームワーク
+;
+; - Project page
+; https://github.com/emacs-jp/init-loader
+;=======================================================================
+(require 'init-loader)
+;(init-loader-load "~/.emacs.d/inits")
+(init-loader-load)
 
 ;;
 ;=======================================================================
