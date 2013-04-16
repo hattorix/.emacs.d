@@ -44,6 +44,15 @@
 
 ;;
 ;=======================================================================
+; Emacs Lisp Package Archive
+;=======================================================================
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
+;;
+;=======================================================================
 ; elisp の自動バイトコンパイル
 ;=======================================================================
 (require 'auto-async-byte-compile)
