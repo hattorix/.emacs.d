@@ -17,7 +17,6 @@
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
 (add-to-list 'load-path (concat siteinit-path "anything") t)
 (add-to-list 'load-path (concat siteinit-path "auto-complete") t)
-(add-to-list 'load-path (concat siteinit-path "magit") t)
 (add-to-list 'load-path (concat siteinit-path "mmm-mode") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
@@ -409,20 +408,6 @@
 
 ;;
 ;=======================================================================
-; magit.el
-; - Git
-;
-; - Project page
-; http://philjackson.github.com/magit/
-;=======================================================================
-(autoload 'magit-status "magit" nil t)
-
-;; vc-mode 無効化
-;; - http://bit.ly/xPV6eW
-(eval-after-load "vc" '(remove-hook 'find-file-hooks 'vc-find-file-hook))
-
-;;
-;=======================================================================
 ; dsvn.el
 ; - Subversion
 ;
@@ -771,7 +756,6 @@
 (global-set-key [C-next] 'tabbar-forward-tab)  ;次のタブへ
 (global-set-key [C-tab] 'other-window-or-split);次のウィンドウか分割か
 
-(global-set-key "\C-cg" 'magit-status)         ;magit実行
 (global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
 (global-set-key "\C-ct" 'multi-term)           ;ターミナルを開く
 (global-set-key "\C-cr" 'my-window-resizer)    ;ウィンドウのリサイズ
