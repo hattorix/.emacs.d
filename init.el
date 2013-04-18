@@ -20,7 +20,6 @@
 (add-to-list 'load-path (concat siteinit-path "magit") t)
 (add-to-list 'load-path (concat siteinit-path "mmm-mode") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
-(add-to-list 'load-path (concat siteinit-path "scala-mode") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
 (add-to-list 'load-path (concat siteinit-path "yasnippet") t)
 
@@ -90,25 +89,6 @@
   )
 (add-hook 'grep-setup-hook 'my-grep-edit-setup t)
 
-
-;=======================================================================
-; flymake.el
-; - 構文チェック
-;=======================================================================
-
-;-----------------------------------------------
-; Scala で flymake を使う
-;-----------------------------------------------
-(when (executable-find "scalac")
-  (defun flymake-scala-init ()
-    (flymake-simple-generic-init
-     "scalac" (list "-d" temporary-file-directory)))
-
-  (push '("\\.scala$" flymake-scala-init) flymake-allowed-file-name-masks)
-  ;; flymake-err-line-patterns は python の設定で吸収
-  )
-
-
 ;;
 ;=======================================================================
 ; gdb-mode.el
@@ -119,13 +99,6 @@
 
 ;; I/O バッファを開くかどうか
 (setq gdb-use-separate-io-buffer t)
-
-;;
-;=======================================================================
-; scala-mode.el
-; - Scala プログラミング用のメジャーモード
-;=======================================================================
-(require 'scala-mode-auto)
 
 ;;
 ;=======================================================================
