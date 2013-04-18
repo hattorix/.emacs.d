@@ -1,4 +1,5 @@
 ;;; csharp-mode.el --- C# mode derived mode
+;; Version: 20120204.1826
 
 ;; Author     : Dylan R. E. Moonfire (original)
 ;; Maintainer : Dino Chiesa <dpchiesa@hotmail.com>
@@ -7,7 +8,7 @@
 ;; Version    : 0.8.6
 ;; Keywords   : c# languages oop mode
 ;; X-URL      : http://code.google.com/p/csharpmode/
-;; Last-saved : <2011-May-22 10:51:23>
+;; Last-saved : <2011-May-21 20:28:30>
 
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -3938,7 +3939,7 @@ Returns nil if not found.
 See also, `string-indexof'
 
 "
-  (let ((i (1- (length s)))
+  (let ((i (length s))
         ix c2)
     (while (and (>= i 0) (not ix))
       (setq c2 (aref s i))
@@ -5852,7 +5853,7 @@ $0" "XML Documentation" nil)
 [assembly: AssemblyTitle(\"$1\")]
 [assembly: AssemblyCompany(\"${2:YourCoName}\")]
 [assembly: AssemblyProduct(\"${3}\")]
-[assembly: AssemblyCopyright(\"Copyright © ${4:Someone} 2011\")]
+[assembly: AssemblyCopyright(\"Copyright Â© ${4:Someone} 2011\")]
 [assembly: AssemblyTrademark(\"\")]
 [assembly: AssemblyCulture(\"\")]
 [assembly: AssemblyConfiguration(\"\")]
