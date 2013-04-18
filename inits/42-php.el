@@ -11,8 +11,6 @@
 ; - Project homepage
 ; http://sourceforge.net/projects/php-mode/
 ;=======================================================================
-(require 'php-mode)
-
 (add-hook 'php-mode-hook
           '(lambda ()
              ;; インデントスタイルの設定(gnu,bsd,k&r,stroustrup,linux,java)
