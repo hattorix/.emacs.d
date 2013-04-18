@@ -3,7 +3,6 @@
 ;; Copyright (C) 2000 by Michael Abraham Shulman
 
 ;; Author: Michael Abraham Shulman <mas@kurukshetra.cjb.net>
-;; Version: $Id: mmm-auto.el,v 1.21 2003/03/25 21:49:26 viritrilbia Exp $
 
 ;;{{{ GPL
 
@@ -66,7 +65,8 @@
 
 (defvar mmm-autoloaded-classes
   '((mason "mmm-mason" nil)
-    (embedded-css "mmm-sample" nil)
+    (myghty "mmm-myghty" nil)
+    (html-css "mmm-sample" nil)
     (html-js "mmm-sample" nil)
     (here-doc "mmm-sample" nil)
     (embperl "mmm-sample" nil)
@@ -147,15 +147,14 @@ everything in `mmm-major-mode-hook' will be run."
   (remove-hook 'post-command-hook 'mmm-check-changed-buffers)
   (dolist (buffer mmm-changed-buffers-list)
     (when (buffer-live-p buffer)
-      (save-excursion
-        (set-buffer buffer)
+      (with-current-buffer buffer
         (mmm-run-major-mode-hook))))
   (setq mmm-changed-buffers-list '()))
 
 (defun mmm-mode-on-maybe ()
   "Conditionally turn on MMM Mode.
-Turn on MMM Mode if `global-mmm-mode' is non-nil and there are classes
-to apply, or always if `global-mmm-mode' is t."
+Turn on MMM Mode if `mmm-global-mode' is non-nil and there are classes
+to apply, or always if `mmm-global-mode' is t."
   (cond ((eq mmm-global-mode t) (mmm-mode-on))
         ((not mmm-global-mode))
         ((mmm-get-all-classes nil) (mmm-mode-on)))

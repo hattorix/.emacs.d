@@ -17,7 +17,6 @@
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
 (add-to-list 'load-path (concat siteinit-path "anything") t)
 (add-to-list 'load-path (concat siteinit-path "auto-complete") t)
-(add-to-list 'load-path (concat siteinit-path "mmm-mode") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
 (add-to-list 'load-path (concat siteinit-path "yasnippet") t)
@@ -52,20 +51,6 @@
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;
-;=======================================================================
-; mmm-mode
-; バッファ内で、複数のメジャーモードを共存
-;
-; - Project page
-; http://mmm-mode.sourceforge.net/
-;=======================================================================
-;; mmm-mode
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
-(set-face-background 'mmm-default-submode-face nil)
-;(set-face-background 'mmm-default-submode-face "gainsboro")
-
-
 ;;
 ;=======================================================================
 ; grep-edit.el

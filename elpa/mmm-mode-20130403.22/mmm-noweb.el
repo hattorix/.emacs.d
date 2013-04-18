@@ -32,9 +32,14 @@
 
 ;; This file contains the definition of an MMM Mode submode class for
 ;; editing Noweb programs.
+;;
+;; FIXME: The more advanced features don't work: `mmm-name-at' and
+;; `mmm-syntax-region' are undefined. Need to dig around in the bug reports
+;; and/or discussions, wherever the code using them was submitted.
 
 ;;; Code:
 
+(require 'cl)
 (require 'mmm-region)
 (require 'mmm-vars)
 (require 'mmm-mode)

@@ -1,14 +1,15 @@
 ;;; mmm-mode.el --- Allow Multiple Major Modes in a buffer
 
 ;; Copyright (C) 1999, 2004 by Michael Abraham Shulman
+;; Copyright (C) 2013 by Dmitry Gutov
 
 ;; Emacs Lisp Archive Entry
 ;; Package: mmm-mode
 ;; Author: Michael Abraham Shulman <viritrilbia@users.sourceforge.net>
+;; Maintainer: Dmitry Gutov <dgutov@yandex.ru>
+;; URL: https://github.com/purcell/mmm-mode
 ;; Keywords: convenience, faces, languages, tools
-;; Version: 0.4.8
-
-;; Revision: $Id: mmm-mode.el,v 1.17 2004/06/16 14:14:18 alanshutko Exp $
+;; Version: 0.5.1
 
 ;;{{{ GPL
 
@@ -116,17 +117,17 @@ over certain regions.  The submode regions are usually highlighted by
 a background color for ease of recognition.  While the point is in a
 submode region, the following changes \(are supposed to) occur:
 
-1. The local keymap is that of the submode.
+1. The local keymap and the syntax table are that of the submode.
 2. The mode line changes to show what submode region is active.
 3. The major mode menu and mouse popup menu are that of the submode.
 4. Some local variables of the submode shadow the default mode's.
-5. The syntax table and indentation are those of the submode.
-6. Font-lock fontifies correctly for the submode.
+5. Font-lock fontifies correctly for the submode.
+6. Indentation function dispatches to the appropriate submode.
 
 For further information, including installation and configuration
 instructions, see the Info file mmm.info which is included with the
 distribution of MMM Mode.  Many of MMM's configuration variables are
-available through M-x customize under Programming | Tools | Mmm."
+available through M-x customize-group RET mmm."
   (interactive "P")
   (if (if arg (> (prefix-numeric-value arg) 0) (not mmm-mode))
       (mmm-mode-on)
@@ -156,13 +157,18 @@ available through M-x customize under Programming | Tools | Mmm."
                   (copy-tree (cdr (assq major-mode mmm-region-saved-locals-defaults)))))
      ;; Without the next line, the (make-marker) above gets replaced
      ;; with the starting value of nil, and all comes to naught.
-     (mmm-set-local-variables major-mode)
+     (mmm-set-local-variables major-mode nil)
      (mmm-add-hooks)
      (mmm-fixup-skeleton)
      (make-local-variable 'font-lock-fontify-region-function)
-     (make-local-variable 'font-lock-beginning-of-syntax-function)
-     (setq font-lock-fontify-region-function 'mmm-fontify-region
-           font-lock-beginning-of-syntax-function 'mmm-beginning-of-syntax)
+     (setq font-lock-fontify-region-function 'mmm-fontify-region)
+     (set (make-local-variable (if (boundp 'syntax-begin-function) ; Emacs >= 23
+                                   'syntax-begin-function
+                                 'font-lock-beginning-of-syntax-function))
+          'mmm-beginning-of-syntax)
+     (set (make-local-variable 'syntax-propertize-function)
+          'mmm-syntax-propertize-function)
+     (set (make-local-variable 'indent-line-function) mmm-indent-line-function)
      (setq mmm-mode t)
      (condition-case err
          (mmm-apply-all)
@@ -189,9 +195,11 @@ available through M-x customize under Programming | Tools | Mmm."
     (mmm-clear-local-variables)
     (mmm-update-submode-region)
     (setq font-lock-fontify-region-function
-          (get mmm-primary-mode 'mmm-fontify-region-function)
-          font-lock-beginning-of-syntax-function
-          (get mmm-primary-mode 'mmm-beginning-of-syntax-function))
+          (get mmm-primary-mode 'mmm-fontify-region-function))
+    (set (if (boundp 'syntax-begin-function) ; Emacs >= 23
+             'syntax-begin-function
+           'font-lock-beginning-of-syntax-function)
+         (get mmm-primary-mode 'mmm-beginning-of-syntax-function))
     (mmm-update-font-lock-buffer)
     (mmm-refontify-maybe)
     (setq mmm-mode nil)

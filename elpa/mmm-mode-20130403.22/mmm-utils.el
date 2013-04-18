@@ -3,7 +3,6 @@
 ;; Copyright (C) 2000 by Michael Abraham Shulman
 
 ;; Author: Michael Abraham Shulman <viritrilbia@users.sourceforge.net>
-;; Version: $Id: mmm-utils.el,v 1.14 2003/03/09 17:04:04 viritrilbia Exp $
 
 ;;{{{ GPL
 
@@ -46,9 +45,7 @@ means not hidden, not a minibuffer, not in batch mode, and not in of
                (window-minibuffer-p (selected-window))
                (memq major-mode mmm-never-modes)
                noninteractive
-               ;; Unnecessary as now hidden
-;;;               (equal (buffer-name) mmm-temp-buffer-name)
-               )
+               mmm-in-temp-buffer)
      ,@body))
 
 ;;;(def-edebug-spec mmm-valid-buffer t)
@@ -78,7 +75,11 @@ substituted for the corresponding REGEXP wherever it matches."
     (save-match-data
       (dolist (pair arg-pairs)
         (while (string-match (car pair) string)
-          (setq string (replace-match (cdr pair) t t string))))))
+          (setq string (replace-match
+                        (if (fboundp 'format-mode-line)
+                            (format-mode-line (cdr pair))
+                          (cdr pair))
+                        t t string))))))
   string)
 
 (defun mmm-format-matches (string &optional on-string)
@@ -93,7 +94,7 @@ ON-STRING, if supplied, means to use the match data from a
           subexp)
       (save-match-data
         (while (string-match "~\\([0-9]\\)" string)
-          (setq subexp (string-to-int (match-string-no-properties 1 string))
+          (setq subexp (string-to-number (match-string-no-properties 1 string))
                 string (replace-match
 			(save-match-data
 			  (set-match-data old-data)

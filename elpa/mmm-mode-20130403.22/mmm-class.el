@@ -3,7 +3,6 @@
 ;; Copyright (C) 2000, 2004 by Michael Abraham Shulman
 
 ;; Author: Michael Abraham Shulman <viritrilbia@users.sourceforge.net>
-;; Version: $Id: mmm-class.el,v 1.19 2004/06/11 00:31:07 alanshutko Exp $
 
 ;;{{{ GPL
 
@@ -114,6 +113,7 @@ and interactive history."
   (mmm-clear-overlays start stop 'strict)
   (mmm-apply-classes (mmm-get-all-classes t) :start start :stop stop)
   (mmm-update-submode-region)
+  (syntax-ppss-flush-cache start)
   (mmm-refontify-maybe start stop))
 
 ;;}}}
@@ -205,6 +205,7 @@ the rest of the arguments are for an actual class being applied. See
 
 (defun* mmm-match-region
     (&key start stop front back front-verify back-verify
+          front-delim back-delim
           include-front include-back front-offset back-offset
           front-form back-form save-matches match-submode match-face
 	  front-match back-match end-not-begin
@@ -270,8 +271,8 @@ BEGINP, start at \(match-beginning MATCH), else \(match-end MATCH),
 and move OFFSET.  Handles all values of OFFSET--see `mmm-classes-alist'."
   (save-excursion
     (goto-char (if beginp
-		   (match-beginning front-match)
-		 (match-end back-match)))
+		   (match-beginning match)
+		 (match-end match)))
     (dolist (spec (if (listp offset) offset (list offset)))
       (if (numberp spec)
           (forward-char (or spec 0))

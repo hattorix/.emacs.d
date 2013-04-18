@@ -1,9 +1,9 @@
 ;;; mmm-vars.el --- Variables for MMM Mode
 
 ;; Copyright (C) 2000, 2004 by Michael Abraham Shulman
+;; Copyright (C) 2012, 2013 by Dmitry Gutov
 
 ;; Author: Michael Abraham Shulman <viritrilbia@users.sourceforge.net>
-;; Version: $Id: mmm-vars.el,v 1.56 2004/06/16 14:14:18 alanshutko Exp $
 
 ;;{{{ GPL
 
@@ -33,6 +33,7 @@
 ;;; Code:
 
 (require 'mmm-compat)
+(require 'cl)
 
 ;; MISCELLANEOUS
 ;;{{{ Shut up the Byte Compiler
@@ -122,13 +123,14 @@
         '(mode-popup-menu
           (((lambda () current-menubar) . set-buffer-menubar))
           ))
-    font-lock-keywords
+    (font-lock-keywords buffer)
+    font-lock-set-defaults
+    font-lock-major-mode
     font-lock-keywords-only
     font-lock-keywords-case-fold-search
     font-lock-syntax-table
     font-lock-mark-block-function       ; Override this?
     font-lock-syntactic-keywords
-    indent-line-function
     parse-sexp-ignore-comments  ; Fixes indentation in PHP-mode?
     ;; Can be different in different buffers
     (c-basic-offset
@@ -150,7 +152,6 @@
 	 c-after-suffixed-type-decl-key
 	 c-after-suffixed-type-maybe-decl-key
 	 c-any-class-key
-	 c-any-class-key 
 	 c-asm-stmt-kwds
 	 c-assignment-op-regexp
 	 c-backslash-column
@@ -158,29 +159,29 @@
 	 c-bitfield-kwds
 	 c-block-comment-prefix
 	 c-block-decls-with-vars
+         c-block-prefix-charset
 	 c-block-stmt-1-key
-	 c-block-stmt-1-key 
 	 c-block-stmt-1-kwds
 	 c-block-stmt-2-key
-	 c-block-stmt-2-key 
 	 c-block-stmt-2-kwds
 	 c-brace-list-key 
 	 c-cast-parens 
 	 c-class-key
-	 c-class-key 
 	 c-class-kwds
 	 c-cleanup-list
 	 c-colon-type-list-re 
 	 c-comment-only-line-offset
 	 c-comment-prefix-regexp
 	 c-comment-start-regexp
-	 c-comment-start-regexp 
 	 c-cpp-defined-fns
 	 c-current-comment-prefix
 	 c-decl-block-key
-	 c-decl-block-key 
-	 c-decl-prefix-re 
+         c-decl-hangon-key
+         c-decl-prefix-or-start-re
+	 c-decl-prefix-re
 	 c-decl-spec-kwds
+         c-decl-start-kwds
+         c-decl-start-re
 	 c-doc-comment-start-regexp
 	 c-expr-kwds
 	 c-file-offsets
@@ -204,16 +205,15 @@
 	 c-keywords
 	 c-keywords-obarray
 	 c-keywords-regexp
-	 c-keywords-regexp 
 	 c-known-type-key
 	 c-label-key
-	 c-label-key 
 	 c-label-kwds
 	 c-label-kwds-regexp
-	 c-label-kwds-regexp 
 	 c-label-minimum-indentation
 	 c-lambda-kwds
 	 c-literal-start-regexp 
+	 c-macro-with-semi-re
+         c-nonlabel-token-key
 	 c-nonsymbol-chars 
 	 c-nonsymbol-token-regexp
 	 c-not-decl-init-keywords
@@ -222,36 +222,26 @@
 	 c-opt-<>-arglist-start-in-paren
 	 c-opt-<>-sexp-key 
 	 c-opt-access-key
-	 c-opt-access-key 
 	 c-opt-asm-stmt-key
-	 c-opt-asm-stmt-key 
 	 c-opt-bitfield-key
-	 c-opt-bitfield-key 
 	 c-opt-block-decls-with-vars-key
 	 c-opt-block-stmt-key
-	 c-opt-block-stmt-key 
 	 c-opt-cpp-prefix 
 	 c-opt-cpp-start 
 	 c-opt-decl-spec-key
 	 c-opt-friend-key
-	 c-opt-friend-key 
 	 c-opt-identifier-concat-key
 	 c-opt-inexpr-block-key
-	 c-opt-inexpr-block-key 
 	 c-opt-inexpr-brace-list-key
 	 c-opt-inexpr-class-key
-	 c-opt-inexpr-class-key 
 	 c-opt-lambda-key
-	 c-opt-lambda-key 
 	 c-opt-method-key
-	 c-opt-method-key 
 	 c-opt-postfix-decl-spec-key
 	 c-opt-type-component-key
 	 c-opt-type-concat-key 
 	 c-opt-type-modifier-key 
 	 c-opt-type-suffix-key 
 	 c-other-decl-block-key
-	 c-other-decl-block-key 
 	 c-other-decl-block-kwds
 	 c-other-decl-kwds
 	 c-overloadable-operators-regexp
@@ -264,20 +254,17 @@
 	 c-protection-kwds
 	 c-recognize-<>-arglists 
 	 c-recognize-knr-p
-	 c-recognize-knr-p 
 	 c-recognize-paren-inits 
 	 c-recognize-typeless-decls
 	 c-regular-keywords-regexp
 	 c-simple-stmt-key 
 	 c-simple-stmt-kwds
 	 c-special-brace-lists
-	 c-special-brace-lists 
 	 c-specifier-key 
 	 c-specifier-kwds
 	 c-stmt-delim-chars 
 	 c-stmt-delim-chars-with-comma
 	 c-symbol-key
-	 c-symbol-key 
 	 c-symbol-start 
 	 c-syntactic-eol
 	 c-syntactic-ws-end 
@@ -285,9 +272,16 @@
 	 c-type-decl-prefix-key 
 	 c-type-decl-suffix-key 
 	 c-type-prefix-key 
+         c-prefix-spec-kwds-re
+         c-typedef-key
+	 c-typedef-decl-key
 	 comment-end 
 	 comment-start 
 	 comment-start-skip))
+    ,@(mapcar
+       (lambda (var) (list var nil '(js-mode)))
+       '(js--quick-match-re
+         js--quick-match-re-func))
     ;; Skeleton insertion
     skeleton-transformation
     ;; Abbrev mode
@@ -298,6 +292,13 @@
     ((current-local-map . use-local-map) buffer)
     paragraph-separate
     paragraph-start
+    (whitespace-active-style buffer)
+    (whitespace-display-table buffer)
+    (whitespace-display-table-was-local buffer)
+    (whitespace-font-lock buffer)
+    (whitespace-font-lock-mode buffer)
+    (whitespace-font-lock-keywords buffer)
+    (whitespace-mode buffer)
     )
   "Which local variables to save for major mode regions.
 Each element has the form \(VARIABLE [TYPE [MODES]]), causing VARIABLE
@@ -378,35 +379,51 @@ of coloring respectively.
                  (const :tag "Low" 1)
                  (const :tag "High" 2)))
 
-(defface mmm-init-submode-face '((t (:background "Pink")))
+(defface mmm-init-submode-face '((((background light)) (:background "Pink"))
+				 (((background dark)) (:background "MediumOrchid"))
+				 (t (:background "Pink")))
   "Face used for submodes containing initialization code."
   :group 'mmm-faces)
 
-(defface mmm-cleanup-submode-face '((t (:background "Wheat")))
+(defface mmm-cleanup-submode-face '((((background light)) (:background "Wheat"))
+				    (((background dark)) (:background "peru"))
+				    (t (:background "Wheat")))
   "Face used for submodes containing cleanup code."
   :group 'mmm-faces)
 
-(defface mmm-declaration-submode-face '((t (:background "Aquamarine")))
+(defface mmm-declaration-submode-face '((((background light)) (:background "Aquamarine"))
+					(((background dark)) (:background "DarkTurquoise"))
+					(t (:background "Aquamarine")))
   "Face used for submodes containing declarations."
   :group 'mmm-faces)
 
-(defface mmm-comment-submode-face '((t (:background "SkyBlue")))
+(defface mmm-comment-submode-face '((((background light)) (:background "SkyBlue"))
+				    (((background dark)) (:background "SteelBlue"))
+				    (t (:background "SkyBlue")))
   "Face used for submodes containing comments and documentation."
   :group 'mmm-faces)
 
-(defface mmm-output-submode-face '((t (:background "Plum")))
+(defface mmm-output-submode-face '((((background light)) (:background "Plum"))
+				    (((background dark)) (:background "MediumVioletRed"))
+				    (t (:background "Plum")))
   "Face used for submodes containing expression that are output."
   :group 'mmm-faces)
 
-(defface mmm-special-submode-face '((t (:background "MediumSpringGreen")))
+(defface mmm-special-submode-face '((((background light)) (:background "MediumSpringGreen"))
+				    (((background dark)) (:background "ForestGreen"))
+				    (t (:background "MediumSpringGreen")))
   "Face used for special submodes not fitting any other category."
   :group 'mmm-faces)
 
-(defface mmm-code-submode-face '((t (:background "LightGray")))
+(defface mmm-code-submode-face '((((background light)) (:background "LightGray"))
+				 (((background dark)) (:background "DimGray"))
+				 (t (:background "LightGray")))
   "Face used for submodes containing ordinary code."
   :group 'mmm-faces)
 
-(defface mmm-default-submode-face '((t (:background "gray85")))
+(defface mmm-default-submode-face '((((background light)) (:background "gray85"))
+				    (((background dark)) (:background "gray20"))
+				    (t (:background "gray85")))
   "Face used for all submodes at decoration level 1.
 Also used at decoration level 2 for submodes not specifying a type."
   :group 'mmm-faces)
@@ -518,6 +535,7 @@ unnecessary. It probably won't go away, though."
 
 (defcustom mmm-major-mode-preferences
   '((perl cperl-mode perl-mode)
+    (python python-mode python-mode)
     (javascript javascript-mode c++-mode)
     (java jde-mode java-mode c++-mode)
     (css css-mode c++-mode))
@@ -535,12 +553,12 @@ which will always be available."
                                          (fboundp))))))
 
 (defun mmm-add-to-major-mode-preferences (language mode &optional default)
-  "Set the preferred major mode for LANGUAGE to MODE.
-This sets the value of `mmm-major-mode-preferences'.  If DEFAULT is
-nil or unsupplied, MODE is added at the front of the list of modes for
-LANGUAGE.  If DEFAULT is non-nil, then it is added at the end.  This
-may be used by packages to ensure that some mode is present, but not
-override any user-specified mode."
+  "Add major mode MODE as acceptable for LANGUAGE.
+This sets the value of `mmm-major-mode-preferences'. If DEFAULT
+is non-nil, MODE is added at the front of the list of modes for
+LANGUAGE. Otherwise, it is added at the end. This may be used by
+packages to ensure that some mode is present, but not override
+any user-specified mode."
   (let ((pair (assq language mmm-major-mode-preferences)))
     (if pair
         ;; Existing mode preferences
@@ -762,6 +780,45 @@ parent buffer.  In general, this has been found to cause more problems
 than it solves, but some modes require it.")
 
 ;;}}}
+;;{{{ Idle Parsing
+
+(defcustom mmm-parse-when-idle nil
+  "Non-nil to automatically reparse the buffer when it has some
+  modifications and Emacs has been idle for `mmm-idle-timer-delay'."
+  :type 'boolean
+  :group 'mmm)
+
+(defcustom mmm-idle-timer-delay 0.2
+  "Delay in secs before re-parsing after user makes changes."
+  :type 'number
+  :group 'mmm)
+(make-variable-buffer-local 'mmm-idle-timer-delay)
+
+(defvar mmm-mode-parse-timer nil "Private variable.")
+(make-variable-buffer-local 'mmm-mode-parse-timer)
+(defvar mmm-mode-buffer-dirty nil "Private variable.")
+(make-variable-buffer-local 'mmm-mode-buffer-dirty)
+
+(defun mmm-mode-edit (beg end len)
+  (setq mmm-mode-buffer-dirty t)
+  (mmm-mode-reset-timer))
+
+(defun mmm-mode-reset-timer ()
+  (when mmm-mode-parse-timer
+    (cancel-timer mmm-mode-parse-timer))
+  (setq mmm-mode-parse-timer
+        (run-with-idle-timer mmm-idle-timer-delay nil
+                             #'mmm-mode-idle-reparse (current-buffer))))
+
+(defun mmm-mode-idle-reparse (buffer)
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (when mmm-mode-buffer-dirty
+        (mmm-apply-all)
+        (setq mmm-mode-buffer-dirty nil)
+        (setq mmm-mode-parse-timer nil)))))
+
+;;}}}
 
 ;; NON-USER VARIABLES
 ;;{{{ Mode Variable
@@ -969,7 +1026,7 @@ The CLASSES are all made private, i.e. non-user-visible."
 ;;}}}
 ;;{{{ Version Number
 
-(defconst mmm-version "0.4.8"
+(defconst mmm-version "0.5.1"
   "Current version of MMM Mode.")
 
 (defun mmm-version ()
@@ -979,8 +1036,13 @@ The CLASSES are all made private, i.e. non-user-visible."
 ;;}}}
 ;;{{{ Temp Buffer Name
 
-(defvar mmm-temp-buffer-name " *mmm-temp*"
-  "Name for temporary buffers created by MMM Mode.")
+(defvar mmm-temp-buffer-name "mmm-temp-buffer"
+  "Name for temporary buffers created by MMM Mode.
+Using non-special name, so that font-lock-mode will be enabled
+automatically when appropriate, and will set all related vars.")
+
+(defvar mmm-in-temp-buffer nil
+  "Bound to t when working in the temp buffer.")
 
 ;;}}}
 ;;{{{ Interactive History
