@@ -1,4 +1,5 @@
 ;;; pkgbuild-mode.el --- Interface to the ArchLinux package manager
+;; Version: 20120214.2332
 
 ;; $Id: pkgbuild-mode.el,v 1.23 2007/10/20 16:02:14 juergen Exp $
 ;; Copyright (C) 2005-2010 Juergen Hoetzel

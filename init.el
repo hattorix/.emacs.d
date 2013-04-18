@@ -101,18 +101,6 @@
 
 ;;
 ;=======================================================================
-; pkgbuild-mode.el
-; - PKGBUILD ファイル編集用のメジャーモード
-;
-; - Project page
-; https://github.com/juergenhoetzel/pkgbuild-mode
-;=======================================================================
-(autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
-(setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode))
-                              auto-mode-alist))
-
-;;
-;=======================================================================
 ; minibuf-isearch.el
 ; - ミニバッファで isearch 的な検索をする
 ;
