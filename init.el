@@ -12,18 +12,6 @@
 
 ;;
 ;=======================================================================
-; OS ごとの設定を読み込む
-;=======================================================================
-(cond
-  ;; Windows の NTEmacs23
-  ((and (equal system-type 'windows-nt) (>= emacs-major-version 23))
-   (load (concat siteinit-path "ntemacs23")))
-  ;; Linux の Emacs23
-  ((>= emacs-major-version 23)
-   (load (concat siteinit-path "emacs23"))))
-
-;;
-;=======================================================================
 ; elisp の追加読み込み PATH
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
