@@ -1,4 +1,5 @@
 ;;; rfringe.el --- display the relative location of the region, in the fringe.
+;; Version: 20110405.1520
 ;;
 ;; Author     : Dino Chiesa <dpchiesa@hotmail.com>
 ;; Created    : April 2011
@@ -355,3 +356,5 @@ See `window-scroll-functions' for more info.
 
 (provide 'rfringe)
 
+
+;;; rfringe.el ends here
