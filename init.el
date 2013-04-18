@@ -15,7 +15,6 @@
 ; elisp の追加読み込み PATH
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
-(add-to-list 'load-path (concat siteinit-path "anything") t)
 (add-to-list 'load-path (concat siteinit-path "auto-complete") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
@@ -199,29 +198,6 @@
 (yas/initialize)
 
 ;;
-;=======================================================================
-; anything.el
-; - ファイルを開くを一元化
-;
-; - Project wiki
-; http://www.emacswiki.org/emacs/Anything/
-;=======================================================================
-(require 'anything-config)
-
-;; 情報元を設定
-(setq anything-sources (list anything-c-source-buffers
-                             anything-c-source-bookmarks
-                             anything-c-source-file-name-history
-                             anything-c-source-man-pages
-                             anything-c-source-info-pages
-                             anything-c-source-complex-command-history))
-
-;; anything のキーマップ
-(define-key anything-map "\C-p" 'anything-previous-line)
-(define-key anything-map "\C-n" 'anything-next-line)
-(define-key anything-map "\C-v" 'anything-next-page)
-(define-key anything-map "\M-v" 'anything-previous-page)
-
 ;;
 ;=======================================================================
 ; popwin.el
@@ -584,7 +560,6 @@
 (global-set-key "\C-s" 'isearch-forward-regexp);正規表現で検索
 (global-set-key "\C-r" 'query-replace-regexp)  ;正規表現で置換
 (global-set-key "\C-x\C-g" 'my-revert-buffer)  ;カレントバッファを再読み込み
-(global-set-key "\C-xa" 'anything)             ;anything の開始
 (global-set-key "\C-xk" 'my-kill-buffer)       ;カレントバッファを閉じる
 (global-set-key "\C-xt" 'create-tmp-buffer)    ;作業用バッファを作る
 (global-set-key "\C-x\C-b" 'buffer-menu)       ;ウィンドウ分割しないバッファメニュー
