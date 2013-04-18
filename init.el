@@ -18,7 +18,6 @@
 (add-to-list 'load-path (concat siteinit-path "auto-complete") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
-(add-to-list 'load-path (concat siteinit-path "yasnippet") t)
 
 ;;
 ;=======================================================================
@@ -185,17 +184,6 @@
 
   ;; tabbar を有効にする
   (tabbar-mode))
-
-;;
-;=======================================================================
-; yasnippet.el
-; - 入力支援
-;
-; - Project homepage
-; https://github.com/capitaomorte/yasnippet
-;=======================================================================
-(require 'yasnippet)
-(yas/initialize)
 
 ;;
 ;;

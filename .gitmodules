@@ -25,3 +25,6 @@
 [submodule "elisp/anything"]
 	path = elisp/anything
 	url = git://repo.or.cz/anything-config.git
+[submodule "elisp/yasnippet"]
+	path = elisp/yasnippet
+	url = git://github.com/capitaomorte/yasnippet.git

@@ -1,0 +1,7 @@
+# name: type name() const { return name_; }
+#       void name(const type& rhs) { name_ = rhs; }
+# key: attr
+# --
+// $2 $4_;
+${1:const }${2:type}${3:&} ${4:name}() const { return $4_; }
+void set_$4($1$2$3 rhs) { $4_ = rhs; }
