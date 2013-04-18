@@ -31,6 +31,9 @@
 [submodule "elisp/auto-complete"]
 	path = elisp/auto-complete
 	url = http://cx4a.org/repo/auto-complete.git
+[submodule "elisp/popwin"]
+	path = elisp/popwin
+	url = https://github.com/m2ym/popwin-el.git
 [submodule "elisp/popup"]
 	path = elisp/popup
 	url = git://github.com/auto-complete/popup-el.git

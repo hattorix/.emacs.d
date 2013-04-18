@@ -15,7 +15,6 @@
 ; elisp の追加読み込み PATH
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
-(add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
 
 ;;
@@ -183,31 +182,6 @@
 
   ;; tabbar を有効にする
   (tabbar-mode))
-
-;;
-;;
-;=======================================================================
-; popwin.el
-; - ヘルプバッファや補完バッファをポップアップで表示
-;
-; - Project page
-; https://github.com/m2ym/popwin-el
-;=======================================================================
-(require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
-
-;; M-x anything
-(setq anything-samewindow nil)
-(push '("*anything*" :height 20) popwin:special-display-config)
-
-;; M-x dired-jump-other-window
-(push '(dired-mode :position top) popwin:special-display-config)
-
-;; M-!
-(push "*Shell Command Output*" popwin:special-display-config)
-
-;; M-x compile
-(push '(compilation-mode :noselect t) popwin:special-display-config)
 
 ;;
 ;=======================================================================
