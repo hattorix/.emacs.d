@@ -28,3 +28,9 @@
 [submodule "elisp/yasnippet"]
 	path = elisp/yasnippet
 	url = git://github.com/capitaomorte/yasnippet.git
+[submodule "elisp/auto-complete"]
+	path = elisp/auto-complete
+	url = http://cx4a.org/repo/auto-complete.git
+[submodule "elisp/popup"]
+	path = elisp/popup
+	url = git://github.com/auto-complete/popup-el.git

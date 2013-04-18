@@ -15,7 +15,6 @@
 ; elisp の追加読み込み PATH
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
-(add-to-list 'load-path (concat siteinit-path "auto-complete") t)
 (add-to-list 'load-path (concat siteinit-path "popwin") t)
 (add-to-list 'load-path (concat siteinit-path "virtualenv") t)
 
@@ -227,30 +226,6 @@
 ;; 24.3 で動かなくなったのでコメントアウト
 ;(require 'redo+)
 ;(setq undo-no-redo t)
-
-;;
-;=======================================================================
-; auto-complete.el
-; - 自動保管
-;
-; - Project wiki
-; http://www.emacswiki.org/emacs/AutoComplete
-;=======================================================================
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories
-             (concat siteinit-path "auto-complete/dict"))
-(ac-config-default)
-
-;; 4 文字以上の単語の時に補完を開始する
-(setq ac-auto-start 4)
-;; 補完の情報源
-(setq ac-sources '(ac-source-yasnippet
-                   ac-source-dictionary
-                   ac-source-gtags
-                   ac-source-words-in-buffer))
-
-;; キーマップ
-(define-key ac-completing-map "\M-/" 'ac-stop) ; 保管の停止
 
 ;;
 ;=======================================================================
@@ -541,7 +516,6 @@
 
 (global-set-key "\C-cl" 'toggle-truncate-lines);折り返し表示のトグル
 (global-set-key "\C-h" 'backward-delete-char)  ;バックスペース
-;(global-set-key "\C-i" 'auto-complete)         ;文字列保管
 (global-set-key [zenkaku-hankaku]
                 'toggle-input-method)          ;日本語入力
 (global-set-key "\C-o" 'toggle-input-method)   ;日本語入力
