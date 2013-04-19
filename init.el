@@ -68,28 +68,3 @@
 (autoload 'kanji-to-unicode-region "kanji-code" nil t)
 (autoload 'unicode-to-kanji-buffer "kanji-code" nil t)
 (autoload 'unicode-to-kanji-region "kanji-code" nil t)
-
-;;
-;=======================================================================
-; schema-mode using gauche
-;=======================================================================
-(setq scheme-program-name "gosh -i")
-(autoload 'schema-mode "cmuscheme" "Major mode for Scheme." t)
-(autoload 'run-mode "cmuscheme" "Run an inferior Scheme process." t)
-
-(defun scheme-other-window ()
-  "Run scheme on other window"
-  (interactive)
-  (split-window-horizontally)
-  (switch-to-buffer-other-window
-   (get-buffer-create "*scheme*"))
-  (run-scheme scheme-program-name)
-  (other-window -1))
-
-(global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
-
-;;
-;=======================================================================
-; Customizer
-;=======================================================================
-;(global-set-key [f12] 'setnu-mode)             ;行番号表示
