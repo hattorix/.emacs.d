@@ -61,39 +61,6 @@
 
 ;;
 ;=======================================================================
-; dabbrev-ja.el
-; - 日本語で dabbrev(動的略語補完) を使う
-;=======================================================================
-;(load "dabbrev-ja")
-
-;;
-;=======================================================================
-; redo+.el
-; - undo, redo を行えるようにする
-;
-; http://www11.atwiki.jp/s-irie/pages/18.html
-;=======================================================================
-;; 24.3 で動かなくなったのでコメントアウト
-;(require 'redo+)
-;(setq undo-no-redo t)
-(global-set-key [f12] 'redo)                   ;redo
-
-;;
-;=======================================================================
-; mercurial.el
-; - Mercurial 付属の elisp
-;
-; C-c h h でキーバインディング一覧が見れる
-;
-; - 分かりやすい help
-; http://www.lares.dti.ne.jp/~foozy/fujiguruma/scm/mercurial-emacs.html
-;=======================================================================
-(when (require 'mercurial nil t)
-  ;; MQ (Mercurial Queue) で patch 管理をする
-  (require 'mq nil t))
-
-;;
-;=======================================================================
 ; kanji-code.el
 ; - 日本語と Escaped Unicode を変換する
 ;=======================================================================
@@ -101,16 +68,6 @@
 (autoload 'kanji-to-unicode-region "kanji-code" nil t)
 (autoload 'unicode-to-kanji-buffer "kanji-code" nil t)
 (autoload 'unicode-to-kanji-region "kanji-code" nil t)
-
-;;
-;=======================================================================
-; twittering-mode
-;
-; - Project wiki
-; http://www.emacswiki.org/emacs/TwitteringMode/
-;=======================================================================
-(require 'twittering-mode)
-(setq twittering-icon-mode t)                 ; Show icons
 
 ;;
 ;=======================================================================
