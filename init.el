@@ -40,17 +40,6 @@
 
 ;;
 ;=======================================================================
-; powershell-mode.el
-; - Windows PowerShell 編集用のメジャーモード
-;
-; - Emacs wiki
-; http://www.emacswiki.org/emacs/PowerShell
-;=======================================================================
-(require 'powershell-mode)
-(add-to-list 'auto-mode-alist '("\\.ps1$" . powershell-mode))
-
-;;
-;=======================================================================
 ; kill-summary.el
 ; - kill-ring の内容を一覧表示してそこから yank する
 ;
