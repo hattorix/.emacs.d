@@ -203,6 +203,7 @@
 (global-set-key "\C-cr" 'my-window-resizer)    ;ウィンドウのリサイズ
 (global-set-key "\C-x\C-g" 'my-revert-buffer)  ;カレントバッファを再読み込み
 (global-set-key "\C-xk" 'my-kill-buffer)       ;カレントバッファを閉じる
+;(global-set-key "\M-d" 'kill-word-at-point)    ;カーソル下の単語を削除
 (global-set-key [?\C-:] 'search-word-cursor)   ;カーソル下の単語で検索
 (global-set-key [C-tab] 'other-window-or-split);次のウィンドウか分割か
 (global-set-key [M-down] 'transpose-lines-down);カーソル行を下に移動
