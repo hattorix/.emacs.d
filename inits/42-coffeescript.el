@@ -11,7 +11,7 @@
 ; - Project homepage
 ; https://github.com/defunkt/coffee-mode
 ;=======================================================================
-(add-to-list 'load-path (concat siteinit-path "coffee-mode") t)
+(add-to-list 'load-path (concat siteinit-path "elisp/coffee-mode") t)
 
 (when (require 'coffee-mode nil t)
   ;; coffee-mode

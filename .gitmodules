@@ -40,3 +40,6 @@
 [submodule "elisp/js2-mode"]
 	path = elisp/js2-mode
 	url = git://github.com/mooz/js2-mode.git
+[submodule "elisp/coffee-mode"]
+	path = elisp/coffee-mode
+	url = https://github.com/defunkt/coffee-mode.git
