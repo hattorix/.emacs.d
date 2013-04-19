@@ -34,3 +34,29 @@
 ;; Shift+カーソルキー で、分割したウィンドウ間を移動
 (windmove-default-keybindings)
 (setq windmove-wrap-around t)
+
+;=======================================================================
+; スクロール設定
+;=======================================================================
+;; スクロールの基本設定
+(setq scroll-conservatively 15                ;画面の下端 (上端) で移動したときのスクロール量
+      ;; scroll-step 1                           ;(同上)
+      scroll-preserve-screen-position t       ;カーソル位置を維持する (Page-Up, Page-Down とか)
+      scroll-margin 0                         ;上下マージン
+      )
+
+;; ホイールマウスでスクロールを有効に
+(mouse-wheel-mode t)
+
+;; ホイールマウスのスクロール幅を設定（画面の８分の１）
+(global-set-key [mouse-4] '(lambda () (interactive) (scroll-down (/ (window-height) 8))))
+(global-set-key [mouse-5] '(lambda () (interactive) (scroll-up (/ (window-height) 8))))
+
+;; スクロール時にカーソル位置を変えない
+(setq scroll-preserve-screen-position t)
+
+;; 画面スクロール時の重複行数
+(setq next-screen-context-lines 1)
+
+;; スクロールを加速させる
+;(require 'scroll-speedup)
