@@ -5,18 +5,14 @@
 ;;--------------------------------------------------
 ;;
 ;=======================================================================
-; elisp の追加読み込み PATH
-;=======================================================================
-(add-to-list 'load-path (concat siteinit-path "iiimecf") t)
-
-;;
-;=======================================================================
 ; iiimecf
 ; - ATOK X3 for Linux
 ;
 ; - Project homepage
 ; http://www.meadowy.org/~kawabata/iiimecf/
 ;=======================================================================
+;(add-to-list 'load-path (concat siteinit-path "iiimecf") t)
+
 (setq iiimcf-server-control-hostlist (list (concat "/tmp/.iiim-" (user-login-name) "/:0.0")))
 (setq use-atokx3 (if (= 0 (shell-command
                        (concat "netstat --unix -l | grep -q " (car iiimcf-server-control-hostlist))))
