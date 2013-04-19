@@ -11,7 +11,8 @@
 ; - Project homepage
 ; http://code.google.com/p/js2-mode/
 ;=======================================================================
-(autoload 'js2-mode "js2" nil t)
+(add-to-list 'load-path (concat siteinit-path "elisp/js2-mode") t)
+(autoload 'js2-mode "js2-mode" nil t)
 
 ;; インデントの関数の再設定
 (add-hook 'js2-mode-hook
@@ -27,4 +28,3 @@
                     indent-tabs-mode nil)))
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-

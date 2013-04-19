@@ -37,3 +37,6 @@
 [submodule "elisp/popup"]
 	path = elisp/popup
 	url = git://github.com/auto-complete/popup-el.git
+[submodule "elisp/js2-mode"]
+	path = elisp/js2-mode
+	url = git://github.com/mooz/js2-mode.git
