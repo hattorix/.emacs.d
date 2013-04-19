@@ -48,10 +48,6 @@
 ;; ホイールマウスでスクロールを有効に
 (mouse-wheel-mode t)
 
-;; ホイールマウスのスクロール幅を設定（画面の８分の１）
-(global-set-key [mouse-4] '(lambda () (interactive) (scroll-down (/ (window-height) 8))))
-(global-set-key [mouse-5] '(lambda () (interactive) (scroll-up (/ (window-height) 8))))
-
 ;; スクロール時にカーソル位置を変えない
 (setq scroll-preserve-screen-position t)
 
@@ -60,3 +56,11 @@
 
 ;; スクロールを加速させる
 ;(require 'scroll-speedup)
+
+;; ホイールマウスのスクロール幅を設定（画面の８分の１）
+(global-set-key [mouse-4] '(lambda () (interactive) (scroll-down (/ (window-height) 8))))
+(global-set-key [mouse-5] '(lambda () (interactive) (scroll-up (/ (window-height) 8))))
+
+;; 半ページ/スクロール
+(global-set-key "\M-]" '(lambda () (interactive) (scroll-up (/ (window-height) 2))))
+(global-set-key "\M-[" '(lambda () (interactive) (scroll-down (/ (window-height) 2))))
