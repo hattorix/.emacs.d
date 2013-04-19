@@ -444,14 +444,11 @@
 (global-set-key [f1] 'help-for-help)           ;ヘルプ
 (global-set-key [f7] 'next-error)              ;次のエラーを検索
 (global-set-key [S-f7] 'previous-error)        ;前のエラーを検索
-(global-set-key [f10] 'gtags-find-tag-from-here);タグジャンプ
-(global-set-key [S-f10] 'gtags-pop-stack)      ;バックタグジャンプ
 (global-set-key [f12] 'redo)                   ;redo
 ;(global-set-key [f12] 'setnu-mode)             ;行番号表示
 (global-set-key [C-tab] 'other-window-or-split);次のウィンドウか分割か
 
 (global-set-key "\C-cs" 'scheme-other-window)  ;scheme実行
-(global-set-key "\C-ct" 'multi-term)           ;ターミナルを開く
 (global-set-key "\C-cr" 'my-window-resizer)    ;ウィンドウのリサイズ
 
 (put 'set-goal-column 'disabled nil)

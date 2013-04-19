@@ -18,3 +18,8 @@
   (add-hook 'c++-mode-hook (lambda () (gtags-mode 1)))
   )
 
+;=======================================================================
+; global key binding
+;=======================================================================
+(global-set-key [f10] 'gtags-find-tag-from-here);タグジャンプ
+(global-set-key [S-f10] 'gtags-pop-stack)      ;バックタグジャンプ
