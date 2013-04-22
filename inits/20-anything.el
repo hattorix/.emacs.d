@@ -12,16 +12,20 @@
 ; http://www.emacswiki.org/emacs/Anything/
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp/anything") t)
+(add-to-list 'load-path (concat siteinit-path "elisp/anything/extensions") t)
 
 (require 'anything-config)
+(require 'anything-gtags)
 
 ;; 情報元を設定
 (setq anything-sources (list anything-c-source-buffers
                              anything-c-source-bookmarks
                              anything-c-source-file-name-history
+                             anything-c-source-gtags-select
                              anything-c-source-man-pages
                              anything-c-source-info-pages
-                             anything-c-source-complex-command-history))
+                             anything-c-source-complex-command-history
+                             ))
 
 ;=======================================================================
 ; anything のキーマップ
