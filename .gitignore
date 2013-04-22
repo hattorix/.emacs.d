@@ -15,7 +15,4 @@ ac-comphist.dat
 # session.el
 .session
 
-# mmm-mode build files
-mmm-mode/elc-stamp
-mmm-mode/config.status
-mmm-mode/script
+url/
