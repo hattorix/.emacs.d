@@ -43,3 +43,6 @@
 [submodule "elisp/coffee-mode"]
 	path = elisp/coffee-mode
 	url = https://github.com/defunkt/coffee-mode.git
+[submodule "elisp/cmake-project"]
+	path = elisp/cmake-project
+	url = git://github.com/alamaison/emacs-cmake-project.git
