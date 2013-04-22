@@ -41,7 +41,7 @@
 
 ;; ff-find-other-file でヘッダを探すパス
 (defcustom cc-search-directories
-  '("." "/usr/include" "/usr/local/include/*")
+  '("." "/usr/include" "/usr/local/include/*" "/opt/java/include")
   "*See the description of the `ff-search-directories' variable."
   :type '(repeat directory)
   :group 'ff)
