@@ -3,7 +3,7 @@
 ; tabbar.el
 ; - バッファリストのタブ表示
 ;
-; - インストール
+; - インストール (Ubuntu)
 ; # aptitude install emacs-goodies-el
 ;
 ; - Project wiki
@@ -28,46 +28,24 @@
                (find (aref (buffer-name buffer) 0) " *")))
            (buffer-list))))
 
-  ;; tabbar のバージョン違いごとの設定
-  (cond ((string= tabbar-version "2.0")
-         ;; Ubuntu 付属の tabbar
-         ;;
-         ;; 左端のボタンを無効化
-         (setq tabbar-home-button nil)
-         (setq tabbar-buffer-home-button nil)
-         (setq tabbar-scroll-left-button nil)
-         (setq tabbar-scroll-right-button nil)
+  ;; 左端のボタンを無効化
+  (setq tabbar-home-button nil)
+  (setq tabbar-buffer-home-button nil)
+  (setq tabbar-scroll-left-button nil)
+  (setq tabbar-scroll-right-button nil)
 
-         ;; 色設定
-         (set-face-attribute 'tabbar-default nil :background "gray60")
-         (set-face-attribute 'tabbar-unselected nil :background "gray85" :foreground "gray30" :box nil)
-         (set-face-attribute 'tabbar-selected nil :background "#f2f2f6" :foreground "red" :box nil)
-         (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72" :style released-button))
+  ;; 色設定
+  (set-face-attribute 'tabbar-default nil :background "gray60")
+  (set-face-attribute 'tabbar-unselected nil :background "gray85" :foreground "gray30" :box nil)
+  (set-face-attribute 'tabbar-selected nil :background "#f2f2f6" :foreground "red" :box nil)
+  (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72" :style released-button))
 
-         ;; 幅設定
-         (setq tabbar-separator (list 0.5)))
-
-        (t
-         ;; NTEmacs 用 (tabbar-version 1.3)
-         ;;
-         ;; 左端のボタンを無効化
-         (setq tabbar-home-button-enabled "")
-         (setq tabbar-scroll-right-button-enabled "")
-         (setq tabbar-scroll-left-button-enabled "")
-         (setq tabbar-scroll-right-button-disabled "")
-         (setq tabbar-scroll-left-button-disabled "")
-
-         ;; 色設定
-         (set-face-attribute 'tabbar-default-face nil :background "gray60")
-         (set-face-attribute 'tabbar-unselected-face nil :background "gray85" :foreground "gray30" :box nil)
-         (set-face-attribute 'tabbar-selected-face nil :background "#f2f2f6" :foreground "red" :box nil)
-         (set-face-attribute 'tabbar-button-face nil :box '(:line-width 1 :color "gray72" :style released-button))
-
-         ;; 幅設定
-         (set-face-attribute 'tabbar-separator-face nil :height 0.7)))
+  ;; 幅設定
+  (setq tabbar-separator (list 0.5))
 
   ;; tabbar を有効にする
-  (tabbar-mode))
+  (tabbar-mode)
+  )
 
 ;=======================================================================
 ; global key binding
