@@ -22,4 +22,8 @@
 (push "*Shell Command Output*" popwin:special-display-config)
 
 ;; M-x compile
-(push '(compilation-mode :noselect t) popwin:special-display-config)
+(push '(compilation-mode :width 0.5 :position right) popwin:special-display-config)
+
+;; auto-async-byte-compile
+(push '(" *auto-async-byte-compile*" :width 0.5 :position right) popwin:special-display-config)
+; or (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail)
