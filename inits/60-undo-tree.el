@@ -5,5 +5,10 @@
 ; - Emacs wiki
 ; http://www.emacswiki.org/emacs/UndoTree
 ;=======================================================================
-;(require 'undo-tree)
+(require 'undo-tree)
 (global-undo-tree-mode)
+
+;=======================================================================
+; global key binding
+;=======================================================================
+(global-set-key [f12] 'undo-tree-redo)
