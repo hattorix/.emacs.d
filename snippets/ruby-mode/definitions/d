@@ -1,0 +1,6 @@
+# name: define function
+# key: d
+# --
+def ${1:function}
+  $0
+end
