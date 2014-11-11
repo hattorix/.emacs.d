@@ -46,3 +46,6 @@
 [submodule "elisp/cmake-project"]
 	path = elisp/cmake-project
 	url = git://github.com/alamaison/emacs-cmake-project.git
+[submodule "elisp/git-modes"]
+	path = elisp/git-modes
+	url = git@github.com:magit/git-modes.git
