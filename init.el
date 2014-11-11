@@ -8,7 +8,7 @@
 ; このファイルが置かれているディレクトリ
 ;=======================================================================
 (add-to-list 'load-path "~/.emacs.d")
-(defvar siteinit-path (file-name-directory (locate-library "init")))
+(defvar siteinit-path (expand-file-name "~/.emacs.d/"))
 
 ;;
 ;=======================================================================
