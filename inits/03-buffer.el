@@ -9,7 +9,7 @@
 ;=======================================================================
 
 ;; バッファの切り替えに iswitchb を使う
-(iswitchb-mode t)
+;(iswitchb-mode t)
 
 ;; C-xb 後の C-s, C-r で、プレビュー表示する
 (defadvice iswitchb-exhibit
