@@ -33,4 +33,5 @@
   ; global key binding
   ;=====================================================================
   ;; helm の開始
-  (global-set-key "\C-ch" 'helm-mini))
+  (global-set-key "\C-ch" 'helm-mini)
+  (global-set-key (kbd "C-c o") 'helm-occur))
