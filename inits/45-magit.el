@@ -1,4 +1,3 @@
-(add-to-list 'load-path (concat siteinit-path "magit") t)
 ;;
 ;=======================================================================
 ; magit.el
