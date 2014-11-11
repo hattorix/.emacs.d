@@ -19,6 +19,7 @@
 (setq require-final-newline t)                 ;ファイル末尾に改行追加
 (setq mouse-drag-copy-region t)                ;マウス選択のみで kill-ring にコピー
 (fset 'yes-or-no-p 'y-or-n-p)                  ;"yes or no"を"y or n"に
+(setq load-prefer-newer t)                     ;.el と .elc の新しい方を読み込む
 
 ;; インデントに使用する関数を指定
 (setq indent-line-function 'indent-relative-maybe)
