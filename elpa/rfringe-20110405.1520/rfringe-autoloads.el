@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads nil nil ("rfringe-pkg.el" "rfringe.el") (20847
-;;;;;;  50241 890089 687000))
+;;;### (autoloads nil nil ("rfringe-pkg.el" "rfringe.el") (21601
+;;;;;;  47640 272543 689000))
 
 ;;;***
 
