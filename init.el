@@ -16,7 +16,6 @@
 ;=======================================================================
 (add-to-list 'load-path (concat siteinit-path "elisp") t)
 (add-to-list 'load-path (concat siteinit-path "elisp/init-loader") t)
-(add-to-list 'load-path (concat siteinit-path "virtualenv") t)
 
 ;;
 ;=======================================================================
